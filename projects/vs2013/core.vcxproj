@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A517618E-81FC-4B04-8DD0-EEDE038067BB}</ProjectGuid>
+    <ProjectGuid>{052BD984-6884-4E2C-BAFD-2594B4339A46}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>renderer</RootNamespace>
+    <RootNamespace>core</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)lib\</OutDir>
-    <TargetName>renderer_vs2013_w32_d</TargetName>
+    <TargetName>core_vs2013_w32_d</TargetName>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -78,18 +78,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\rendering_framework.h" />
-    <ClInclude Include="..\..\src\commondefs.h" />
-    <ClInclude Include="..\..\src\irendererimpl.h" />
-    <ClInclude Include="..\..\src\renderer.h" />
-    <ClInclude Include="..\..\src\win\rendereropenglwinimpl.h" />
-    <ClInclude Include="..\..\src\win\winglextensionsloader.h" />
+    <ClInclude Include="..\..\src\core\string.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\rendering_framework.cpp" />
-    <ClCompile Include="..\..\src\renderer.cpp" />
-    <ClCompile Include="..\..\src\win\rendereropenglwinimpl.cpp" />
-    <ClCompile Include="..\..\src\win\winglextensionsloader.cpp" />
+    <ClCompile Include="..\..\src\core\string.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
