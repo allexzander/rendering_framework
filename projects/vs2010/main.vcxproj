@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B5F105F-822A-44A9-AD01-9CA29F89EB7A}</ProjectGuid>
+    <ProjectGuid>{57DE764C-FA31-49A5-9C90-B78FEFA0255C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>rendering_framework</RootNamespace>
+    <RootNamespace>main</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,13 +39,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(SolutionDir)\..\..\lib\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\..\..\bin\</OutDir>
+    <TargetName>rendering_framework_test_vs2010_w32_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -53,12 +57,14 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>renderer_vs2010_w32_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -72,19 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\renderer.cpp" />
-    <ClCompile Include="src\win\rendereropenglwinimpl.cpp" />
-    <ClCompile Include="src\win\winglextensionsloader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\irendererimpl.h" />
-    <ClInclude Include="src\renderer.h" />
-    <ClInclude Include="src\win\rendereropenglwinimpl.h" />
-    <ClInclude Include="src\win\winglextensionsloader.h" />
+    <ClCompile Include="..\..\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
