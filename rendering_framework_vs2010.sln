@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "main", "projects\vs2010\main.vcxproj", "{57DE764C-FA31-49A5-9C90-B78FEFA0255C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "renderer", "projects\vs2010\renderer.vcxproj", "{C6915C22-E56A-44B9-9BCF-4A90424AE42B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57DE764C-FA31-49A5-9C90-B78FEFA0255C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{57DE764C-FA31-49A5-9C90-B78FEFA0255C}.Debug|Win32.Build.0 = Debug|Win32
+		{57DE764C-FA31-49A5-9C90-B78FEFA0255C}.Release|Win32.ActiveCfg = Release|Win32
+		{57DE764C-FA31-49A5-9C90-B78FEFA0255C}.Release|Win32.Build.0 = Release|Win32
+		{C6915C22-E56A-44B9-9BCF-4A90424AE42B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C6915C22-E56A-44B9-9BCF-4A90424AE42B}.Debug|Win32.Build.0 = Debug|Win32
+		{C6915C22-E56A-44B9-9BCF-4A90424AE42B}.Release|Win32.ActiveCfg = Release|Win32
+		{C6915C22-E56A-44B9-9BCF-4A90424AE42B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
