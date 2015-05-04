@@ -1,10 +1,10 @@
-#include "src\renderer.h"
+#include "rendering_framework.h"
 
 int main()
 {
-	ALZ_RENDERER::Renderer* pRenderer = ALZ_RENDERER::Renderer::getInstance();
-#if _WIN32
-	pRenderer->initialize(ALZ_RENDERER::Renderer::RER_IMPL_OPENGL_WIN);
-#endif //_WIN32
+	ALZ_RENDERER::RenderingFrameWork* pRenderingFramework = ALZ_RENDERER::RenderingFrameWork::getInstance();
+	ALZ_RENDERER::Renderer* pRenderer = pRenderingFramework->getRenderer();
+	//init win opengl for now...
+	pRenderer->initialize(ALZ_RENDERER::Renderer::RENDERER_IMPLEMENTATION::RER_IMPL_OPENGL_WIN);
 	return 0;
 }

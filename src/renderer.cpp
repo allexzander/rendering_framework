@@ -7,6 +7,7 @@ namespace ALZ_RENDERER
 	Renderer::Renderer() : m_pRendererImpl(nullptr)
 	{
 	}
+
 	Renderer* Renderer::getInstance()
 	{
 		if(!pInstance)
@@ -16,16 +17,18 @@ namespace ALZ_RENDERER
 
 		return pInstance;
 	}
+
 	Renderer::~Renderer()
 	{
 	}
+
 	bool Renderer::initialize(RENDERER_IMPLEMENTATION rendererImpl)
 	{
 		void* renderImplParams = nullptr;
 
 		switch(rendererImpl)
 		{
-		case RER_IMPL_OPENGL_WIN:
+		case RENDERER_IMPLEMENTATION::RER_IMPL_OPENGL_WIN:
 			{
 				m_pRendererImpl = new RendererOpenGlWinImpl();
 				RendererOpenGlWinImpl::WinOpenGLInitParams* openglRendererParams = new RendererOpenGlWinImpl::WinOpenGLInitParams();
@@ -53,6 +56,7 @@ namespace ALZ_RENDERER
 
 		return result;
 	}
+
 	void Renderer::deInitialize()
 	{
 		if(!pInstance || !pInstance->m_initialized)
@@ -71,6 +75,7 @@ namespace ALZ_RENDERER
 		delete pInstance;
 		pInstance = nullptr;
 	}
+
 	void Renderer::render()
 	{
 		if(m_pRendererImpl)
@@ -78,6 +83,7 @@ namespace ALZ_RENDERER
 			m_pRendererImpl->render();
 		}
 	}
+
 	void Renderer::update()
 	{
 		if(m_pRendererImpl)

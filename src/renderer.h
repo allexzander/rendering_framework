@@ -7,10 +7,12 @@ namespace ALZ_RENDERER
 	class Renderer
 	{
 	public:
-		enum RENDERER_IMPLEMENTATION
+		enum class RENDERER_IMPLEMENTATION
 		{
 			RER_IMPL_UNKNOWN = -1,
-			RER_IMPL_OPENGL_WIN
+			RER_IMPL_OPENGL_WIN,
+			RER_IMPL_OPENGL_WIN_DIRECT3D11,
+			RER_IMPL_OPENGL_LINUX
 		};
 	private:
 		Renderer();
