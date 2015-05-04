@@ -1,6 +1,6 @@
 #include "renderer.h"
 #include "irendererimpl.h"
-#include "rendereropenglwinimpl.h"
+#include "win/rendereropenglwinimpl.h"
 
 namespace ALZ_RENDERER
 {
