@@ -91,6 +91,16 @@ namespace CORE_LIB
 		return toConstChar();
 	}
 
+	String::operator double() const
+	{
+		return toDouble(*this);
+	}
+
+	String::operator int() const
+	{
+		return toInt(*this);
+	}
+
 	bool String::isCharADigit(const char _ch)
 	{
 		if(_ch == '0' || _ch == '1' || _ch == '2' || _ch == '3' || _ch == '4' || _ch == '5'
@@ -104,6 +114,58 @@ namespace CORE_LIB
 	double String::toDouble(const String& _string)
 	{
 		double result = 0.0;
+
+		if (_string.size() > 0)
+		{
+			bool isNegative	= (_string.charAt(0) == '-');
+			bool isFractionalPart = false;
+			unsigned int fracPart = 0;
+			unsigned int fractionalPartDivisor = 1;
+
+			for (unsigned int i = (isNegative) ? 1 : 0; i < _string.size(); ++i)
+			{
+				TCHAR ch = _string.charAt(i);
+
+				if (ch == '.')
+				{
+					if (i == 0 || isFractionalPart)
+					{
+						return 0;
+					}
+
+					isFractionalPart = true;
+					continue;
+				}
+
+				if (!isCharADigit(ch))
+				{
+					return 0;
+				}
+
+				if (isFractionalPart)
+				{
+					fracPart = (fracPart * 10) + (ch - '0');
+					fractionalPartDivisor *= 10;
+				}
+				else
+				{
+					result = (result * 10) + (ch - '0');
+				}
+			}
+
+			result += fracPart / static_cast<double>(fractionalPartDivisor);
+
+			if (isNegative)
+			{
+				result = -result;
+			}
+		}
+
 		return result;
+	}
+
+	int String::toInt(const String& _string)
+	{
+		return static_cast<int>(toDouble(_string));
 	}
 };
