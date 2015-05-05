@@ -12,6 +12,6 @@ int main()
 	CORE_LIB::String myString(_T("Привет мир!"));
 	CORE_LIB::String myString1(myString);
 	CORE_LIB::String myString3;
-	const TCHAR* toString = myString.toConstChar();
+	const TCHAR* toString = myString;
 	return 0;
 }

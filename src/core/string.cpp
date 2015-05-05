@@ -2,15 +2,18 @@
 
 namespace CORE_LIB
 {
-	String::String() : m_Buffer(""), m_Size(0)
+	String::String() : m_Buffer(nullptr), m_Size(0)
 	{
+		m_Buffer = new TCHAR[1];
+		m_Buffer[0] = 0;
+		m_Size = 0;
 	}
 
 	String::String(const TCHAR* string) : m_Buffer(nullptr), m_Size(0)
 	{
 		unsigned int len = 0;
 
-		while (string[size] != '\0')
+		while (string[len] != '\0')
 		{
 			++len;
 		}
@@ -83,7 +86,7 @@ namespace CORE_LIB
 		return 0;
 	}
 
-	String::operator const char*() const
+	String::operator const TCHAR*() const
 	{
 		return toConstChar();
 	}
@@ -98,7 +101,7 @@ namespace CORE_LIB
 		return false;
 	}
 
-	double simpleCL::String::toDouble(const String& _string)
+	double String::toDouble(const String& _string)
 	{
 		double result = 0.0;
 		return result;
