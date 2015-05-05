@@ -22,6 +22,10 @@ namespace CORE_LIB
 		TCHAR charAt(unsigned int at) const;
 		unsigned int size() const { return m_Size; }
 		operator const char*() const;
+		//Statics
+	public:
+		static bool   isCharADigit(const char _ch);
+		static double toDouble(const String& _string);
 	private:
 		TCHAR* m_Buffer;
 		unsigned int m_Size;

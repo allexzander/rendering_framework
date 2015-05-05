@@ -82,9 +82,25 @@ namespace CORE_LIB
 
 		return 0;
 	}
-	
+
 	String::operator const char*() const
 	{
 		return toConstChar();
+	}
+
+	bool String::isCharADigit(const char _ch)
+	{
+		if(_ch == '0' || _ch == '1' || _ch == '2' || _ch == '3' || _ch == '4' || _ch == '5'
+			|| _ch == '6' || _ch == '7' || _ch == '8' || _ch == '9')
+		{
+			return true;
+		}
+		return false;
+	}
+
+	double simpleCL::String::toDouble(const String& _string)
+	{
+		double result = 0.0;
+		return result;
 	}
 };
