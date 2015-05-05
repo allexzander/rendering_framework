@@ -21,6 +21,7 @@ namespace CORE_LIB
 		const TCHAR* toConstChar() const;
 		TCHAR charAt(unsigned int at) const;
 		unsigned int size() const { return m_Size; }
+		operator const char*() const;
 	private:
 		TCHAR* m_Buffer;
 		unsigned int m_Size;

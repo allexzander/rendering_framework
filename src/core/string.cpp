@@ -82,4 +82,9 @@ namespace CORE_LIB
 
 		return 0;
 	}
+	
+	String::operator const char*() const
+	{
+		return toConstChar();
+	}
 };
