@@ -2,33 +2,31 @@
 
 namespace CORE_LIB
 {
-	String::String() : m_Buffer(nullptr), m_Size(0)
+	String::String() : m_Buffer(""), m_Size(0)
 	{
-		m_Buffer = new TCHAR[1];
-		m_Buffer[0] = '\0';
 	}
 
 	String::String(const TCHAR* string) : m_Buffer(nullptr), m_Size(0)
 	{
-		unsigned int size = 0;
+		unsigned int len = 0;
 
 		while (string[size] != '\0')
 		{
-			++size;
+			++len;
 		}
 
-		if (size > 0)
+		if (len > 0)
 		{
-			m_Buffer = new TCHAR[size] + 1;
+			m_Buffer = new TCHAR[len + 1];
 
-			for (unsigned i = 0; i < size; ++i)
+			for (unsigned i = 0; i < len; ++i)
 			{
 				m_Buffer[i] = string[i];
 			}
 
-			m_Buffer[size] = '\0';
+			m_Buffer[len] = '\0';
 
-			m_Size = size;
+			m_Size = len;
 		}
 	}
 
@@ -43,7 +41,7 @@ namespace CORE_LIB
 				delete[] m_Buffer;
 			}
 
-			m_Buffer = new TCHAR[copy.size()];
+			m_Buffer = new TCHAR[copy.size() + 1];
 
 			for (unsigned int i = 0; i < copy.size(); ++i)
 			{
