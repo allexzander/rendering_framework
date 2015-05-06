@@ -47,7 +47,7 @@ namespace CORE_LIB
 
 			m_Buffer = new TCHAR[copy.size() + 1];
 
-			for (uint32 i = 0; i < copy.size(); ++i)
+			for (uint32 i = 0; i < static_cast<uint32>(copy.size()); ++i)
 			{
 				m_Buffer[i] = copy.charAt(i);
 			}
@@ -102,6 +102,21 @@ namespace CORE_LIB
 		return toInt(*this);
 	}
 
+	bool String::operator == (const String& rhs)
+	{
+		return isEqual(*this, rhs);
+	}
+
+	bool String::operator<(const String& rhs)
+	{
+		return isLesser(*this, rhs);
+	}
+
+	bool String::operator>(const String& rhs)
+	{
+		return (!isEqual(*this, rhs) && !isLesser(*this, rhs));
+	}
+
 	bool String::isCharADigit(const TCHAR _ch)
 	{
 		if(_ch == '0' || _ch == '1' || _ch == '2' || _ch == '3' || _ch == '4' || _ch == '5'
@@ -123,7 +138,7 @@ namespace CORE_LIB
 			uint32 fracPart = 0;
 			uint32 fractionalPartDivisor = 1;
 
-			for (uint32 i = (isNegative) ? 1 : 0; i < _string.size(); ++i)
+			for (uint32 i = (isNegative) ? 1 : 0; i < static_cast<uint32>(_string.size()); ++i)
 			{
 				TCHAR ch = _string.charAt(i);
 
@@ -168,5 +183,41 @@ namespace CORE_LIB
 	int String::toInt(const String& _string)
 	{
 		return static_cast<int>(toDouble(_string));
+	}
+
+	bool String::isEqual(const String& _string1, const String& _string2)
+	{
+		if (_string1.size() == _string2.size())
+		{
+			for (uint32 i = 0; i < static_cast<uint32>(_string1.size()); ++i)
+			{
+				if (_string1.charAt(i) != _string2.charAt(i))
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool String::isLesser(const String& _string1, const String& _string2)
+	{
+		/*if (_string1.size() == _string2.size())
+		{
+			for (uint32 i = 0; i < static_cast<uint32>(_string1.size()); ++i)
+			{
+				if (_string1.charAt(i) != _string2.charAt(i))
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}*/
+
+		return false;
 	}
 };

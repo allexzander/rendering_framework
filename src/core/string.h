@@ -24,11 +24,16 @@ namespace CORE_LIB
 		operator const TCHAR*() const;
 		operator double() const;
 		operator int() const;
+		bool operator==(const String& rhs);
+		bool operator<(const String& rhs);
+		bool operator>(const String& rhs);
 		//Statics
 	public:
 		static bool   isCharADigit(const TCHAR _ch);
 		static double toDouble(const String& _string);
-		static int toInt(const String& _string);
+		static int	  toInt(const String& _string);
+		static bool	  isEqual(const String& _string1, const String& _string2);
+		static bool	  isLesser(const String& _string1, const String& _string2);
 	private:
 		TCHAR* m_Buffer;
 		size_t m_Size;
