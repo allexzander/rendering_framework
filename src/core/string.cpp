@@ -205,19 +205,26 @@ namespace CORE_LIB
 
 	bool String::isLesser(const String& _string1, const String& _string2)
 	{
-		/*if (_string1.size() == _string2.size())
+		if((_string1.size() == 0 && _string2.size() == 0) || _string2.size() <= _string1.size())
 		{
-			for (uint32 i = 0; i < static_cast<uint32>(_string1.size()); ++i)
+			return false;
+		}
+		
+		if(_string1.size() < _string2.size())
+		{
+			//Left sting is shorter. Return without further comparison.
+			return true;
+		}
+		
+	
+		for (uint32 i = 0; i < static_cast<uint32>(_string1.size()); ++i)
+		{
+			if (_string1.charAt(i) < _string2.charAt(i))
 			{
-				if (_string1.charAt(i) != _string2.charAt(i))
-				{
-					return false;
-				}
-
 				return true;
 			}
-		}*/
-
+		}
+		
 		return false;
 	}
 };
