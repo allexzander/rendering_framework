@@ -1,194 +1,180 @@
 #pragma once
 
-#ifdef __linux__
 #include <stdexcept>
-#endif //__linux__
+#include <assert.h>
 
 #include "commondefs.h"
 
 namespace CORE_LIB
 {
-	template <typename T> class TVector;
+	//forward declarations
+	template <class T> class TVector;
 
-	template <typename T>
+	template <class T>
 	class TVector_iterator
 	{
+		//allow TVector to create TVector_iterator instances
+		friend class TVector <T>;
+
+	public:
+		TVector_iterator() : m_pBegin(nullptr),
+			m_pEnd(nullptr), m_pCurrentElement(nullptr)
+		{
+		}
+
+		TVector_iterator(const TVector_iterator& it) : TVector_iterator()
+		{
+			m_pCurrentElement = m_pBegin = it.begin();
+			m_pEnd = it.end();
+		}
+
 	private:
-		T* m_pCurrentElement;
+		TVector_iterator(T* _begin, T* _end) : m_pBegin(_begin),
+			m_pEnd(_end), m_pCurrentElement(nullptr)
+		{
+			m_pCurrentElement = m_pBegin;
+		}
+
 	public:
-		TVector_iterator(T* _element)
+		T* begin()	 const { return m_pBegin; }
+		T* end()	 const { return m_pEnd;	  }
+		T* current() const { return m_pCurrentElement; }
+
+		void reset()
 		{
-			m_pCurrentElement = _element;
+			if (m_pBegin && m_pEnd)
+			{
+				m_pCurrentElement = m_pBegin;
+			}
 		}
-	public:
-		T* currentElement() { return m_pCurrentElement; }
-		TVector_iterator & operator=(TVector_iterator & _rhs)
+
+		const TVector_iterator& operator=(const TVector_iterator& _rhs)
 		{
-			m_pCurrentElement = _rhs.currentElement();
+			m_pCurrentElement = m_pBegin = _rhs.begin();
+			m_pEnd = _rhs.end();
 			return *this;
 		}
 
-		TVector_iterator  operator++()
+		/*++prefix operator*/
+		TVector_iterator& operator++()
 		{
-			++m_pCurrentElement;
-			return *this;
-		}
-		TVector_iterator  operator++(int)
-		{
-			++m_pCurrentElement;
+			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
+
+			assert(isValid && "TVector_iterator operator++()");
+
+			if (isValid)
+			{
+				++m_pCurrentElement;
+				if (m_pCurrentElement == m_pEnd)
+				{
+					m_pCurrentElement = nullptr;
+				}
+			}
+
 			return *this;
 		}
 
-		TVector_iterator  operator--()
+		/*postfix++ operator*/
+		TVector_iterator operator++(int)
 		{
-			--m_pCurrentElement;
-			return *this;
+			TVector_iterator copySelf = *this;
+
+			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
+
+			assert(isValid && "TVector_iterator operator++(int)");
+
+			if (isValid)
+			{
+				++m_pCurrentElement;
+				if (m_pCurrentElement >= m_pEnd)
+				{
+					m_pCurrentElement = nullptr;
+				}
+			}
+
+			return copySelf;
 		}
-		TVector_iterator  operator--(int)
+
+		TVector_iterator& operator+=(int32 _value)
 		{
-			--m_pCurrentElement;
+			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
+
+			assert(isValid && "TVector_iterator operator++(int)");
+
+			if (isValid)
+			{
+				m_pCurrentElement += _value;
+
+				if (m_pCurrentElement >= m_pEnd)
+				{
+					m_pCurrentElement = nullptr;
+
+				}
+			}
+
 			return *this;
 		}
 
-		TVector_iterator  operator+=(int _value)
+		TVector_iterator operator+(int32 _value)
 		{
-			m_pCurrentElement += _value;
-			return *this;
+			TVector_iterator copy = *this;
+
+			copy += value;
+
+			return copy;
 		}
 
-		TVector_iterator  operator-=(int _value)
-		{
-			m_pCurrentElement -= _value;
-			return *this;
-		}
-
-		TVector_iterator  operator-(int _value)
-		{
-			return TVector_iterator(m_pCurrentElement - _value);
-		}
-
-		T & operator*()
+		T& operator*()
 		{
 			return *m_pCurrentElement;
 		}
 
-		bool operator!=(TVector_iterator & _rhs)
+		bool operator!=(const TVector_iterator& _rhs)
 		{
-			return m_pCurrentElement != _rhs.currentElement();
+			return !(*this == _rhs);
 		}
-		bool operator==(TVector_iterator & _rhs)
+
+		bool operator==(const TVector_iterator& _rhs)
 		{
-			return m_pCurrentElement == _rhs.currentElement();
+			return (m_pBegin == _rhs.begin() && m_pEnd == _rhs.end()
+				&& m_pCurrentElement == _rhs.current());
 		}
-		bool operator<(TVector_iterator & _rhs)
+
+		bool operator<(const TVector_iterator& _rhs)
 		{
-			return m_pCurrentElement < _rhs.currentElement();
+			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
+				&& m_pCurrentElement < _rhs.current());
 		}
-		bool operator>(TVector_iterator & _rhs)
+
+		bool operator>(const TVector_iterator& _rhs)
 		{
-			return m_pCurrentElement > _rhs.currentElement();
+			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
+				&& m_pCurrentElement < _rhs.current());
 		}
-		bool operator>=(TVector_iterator & _rhs)
+
+		bool operator>=(const TVector_iterator& _rhs)
 		{
-			return m_pCurrentElement > _rhs.currentElement() || m_pCurrentElement == _rhs.currentElement();
+			return *this == _rhs || *this > _rhs;
 		}
-		bool operator<=(TVector_iterator & _rhs)
+
+		bool operator<=(const TVector_iterator& _rhs)
 		{
-			return m_pCurrentElement < _rhs.currentElement() || m_pCurrentElement == _rhs.currentElement();
+			return *this == _rhs || *this < _rhs;
 		}
-		friend class TVector<T>;
-	};
-	//Const Iterator
-	template <typename T>
-	class TVector_const_iterator
-	{
+
+		operator bool()
+		{
+			return (m_pBegin != nullptr && m_pEnd != nullptr
+				&& m_pCurrentElement != nullptr);
+		}
+
 	private:
+		T* m_pBegin;
+		T* m_pEnd;
 		T* m_pCurrentElement;
-	public:
-		TVector_const_iterator(T* _element)
-		{
-			m_pCurrentElement = _element;
-		}
-	public:
-		T* currentElement() { return m_pCurrentElement; }
-		TVector_const_iterator & operator=(TVector_const_iterator & _rhs)
-		{
-			m_pCurrentElement = _rhs.currentElement();
-			return *this;
-		}
-
-		TVector_const_iterator  operator++()
-		{
-			++m_pCurrentElement;
-			return *this;
-		}
-		TVector_const_iterator  operator++(int)
-		{
-			++m_pCurrentElement;
-			return *this;
-		}
-
-		TVector_const_iterator  operator--()
-		{
-			--m_pCurrentElement;
-			return *this;
-		}
-		TVector_const_iterator  operator--(int)
-		{
-			--m_pCurrentElement;
-			return *this;
-		}
-
-		TVector_const_iterator  operator+=(int _value)
-		{
-			m_pCurrentElement += _value;
-			return *this;
-		}
-
-		TVector_const_iterator  operator-=(int _value)
-		{
-			m_pCurrentElement -= _value;
-			return *this;
-		}
-
-		TVector_const_iterator  operator-(int _value)
-		{
-			return TVector_iterator<T>(m_pCurrentElement - _value);
-		}
-
-		const T & operator*()
-		{
-			return *m_pCurrentElement;
-		}
-
-		bool operator!=(TVector_const_iterator & _rhs)
-		{
-			return m_pCurrentElement != _rhs.currentElement();
-		}
-		bool operator==(TVector_const_iterator & _rhs)
-		{
-			return m_pCurrentElement == _rhs.currentElement();
-		}
-		bool operator<(TVector_const_iterator & _rhs)
-		{
-			return m_pCurrentElement < _rhs.currentElement();
-		}
-		bool operator>(TVector_const_iterator & _rhs)
-		{
-			return m_pCurrentElement > _rhs.currentElement();
-		}
-		bool operator>=(TVector_const_iterator & _rhs)
-		{
-			return m_pCurrentElement > _rhs.currentElement() || m_pCurrentElement == _rhs.currentElement();
-		}
-		bool operator<=(TVector_const_iterator & _rhs)
-		{
-			return m_pCurrentElement < _rhs.currentElement() || m_pCurrentElement == _rhs.currentElement();
-		}
-		friend class TVector<T>;
 	};
 
-	template <typename T>
+	template <class T>
 	class TVector {
 	private:
 		T* m_pElements;
@@ -212,17 +198,7 @@ namespace CORE_LIB
 		const T& front();
 		const T& back();
 
-		TVector_iterator<T> begin();
-		TVector_iterator<T> end();
-
-		TVector_const_iterator<T> begin() const;
-		TVector_const_iterator<T> end() const;
-
-		TVector_iterator<T> rbegin();
-		TVector_iterator<T> rend();
-
-		TVector_const_iterator<T> rbegin() const;
-		TVector_const_iterator<T> rend() const;
+		TVector_iterator<T> getIterator();
 
 		void reserve(uint32 _newCap);
 
@@ -236,7 +212,7 @@ namespace CORE_LIB
 		void erase(TVector_iterator<T> _pos);
 	};
 
-	template <typename T>
+	template <class T>
 	TVector<T>::TVector()
 	{
 		m_pElements = NULL;
@@ -244,55 +220,55 @@ namespace CORE_LIB
 		m_Size = 0;
 	}
 
-	template <typename T>
+	template <class T>
 	TVector<T>::TVector(uint32 _initialSize)
 	{
 		m_pElements = new T[_initialSize];
 		m_Capacity = _initialSize;
 	}
 
-	template <typename T>
+	template <class T>
 	TVector<T>::TVector(TVector<T>& _source)
 	{
 		m_pElements = new T[_source.capacity()];
 		m_Capacity = _source.capacity();
 		m_Size = 0;
-		for(uint32 i = 0; i < _source.size(); ++i)
+		for (uint32 i = 0; i < _source.size(); ++i)
 		{
 			push_back(_source[i]);
 		}
 	}
 
-	template <typename T>
+	template <class T>
 	TVector<T>::~TVector()
 	{
-		if(m_Capacity > 0)
+		if (m_Capacity > 0)
 		{
 			delete[] m_pElements;
 		}
 	}
 
-	template <typename T>
+	template <class T>
 	TVector<T> & TVector<T>::operator=(TVector<T> & _rhs)
 	{
-		if(m_Capacity > 0)
+		if (m_Capacity > 0)
 		{
 			delete[] m_pElements;
 		}
 
 		m_pElements = new T[_rhs.capacity()];
 
-		for(uint32 i = 0; i < _rhs.size(); ++i)
+		for (uint32 i = 0; i < _rhs.size(); ++i)
 		{
 			push_back(_rhs[i]);
 		}
 		return *this;
 	}
 
-	template <typename T>
+	template <class T>
 	void TVector<T>::push_back(const T& _data)
 	{
-		if(m_Capacity < 1)
+		if (m_Capacity < 1)
 		{
 			m_pElements = new T[1];
 			m_Capacity = 1;
@@ -301,11 +277,11 @@ namespace CORE_LIB
 		}
 		else
 		{
-			if(m_Size == m_Capacity)
+			if (m_Size == m_Capacity)
 			{
-				T* tempElements = new T[m_Size+1];
+				T* tempElements = new T[m_Size + 1];
 				uint32 i = 0;
-				for(; i < m_Size; ++i)
+				for (; i < m_Size; ++i)
 				{
 					tempElements[i] = m_pElements[i];
 				}
@@ -322,12 +298,12 @@ namespace CORE_LIB
 		}
 	}
 
-	template <typename T>
+	template <class T>
 	void TVector<T>::pop_back()
 	{
-		T* tempElements = new T[m_Size-1];
+		T* tempElements = new T[m_Size - 1];
 
-		for(int i = 0; i < m_Size-1; ++i)
+		for (int i = 0; i < m_Size - 1; ++i)
 		{
 			tempElements[i] = m_pElements[i];
 		}
@@ -339,10 +315,10 @@ namespace CORE_LIB
 		--m_Size;
 	}
 
-	template <typename T>
+	template <class T>
 	const T& TVector<T>::front()
 	{
-		if(m_Size > 0)
+		if (m_Size > 0)
 		{
 			return m_pElements[0];
 		}
@@ -352,12 +328,12 @@ namespace CORE_LIB
 		}
 	}
 
-	template <typename T>
+	template <class T>
 	const T& TVector<T>::back()
 	{
-		if(m_Size > 0)
+		if (m_Size > 0)
 		{
-			return m_pElements[m_Size-1];
+			return m_pElements[m_Size - 1];
 		}
 		else
 		{
@@ -365,92 +341,33 @@ namespace CORE_LIB
 		}
 	}
 
-	template <typename T>
-	TVector_iterator<T> TVector<T>::begin()
+	template <class T>
+	TVector_iterator<T> TVector<T>::getIterator()
 	{
-		TVector_iterator<T> it(&m_pElements[0]);
-		return it;
-	}
+		TVector_iterator<T> it;
 
-	template <typename T>
-	TVector_iterator<T> TVector<T>::end()
-	{
-		TVector_iterator<T> it(&m_pElements[m_Size]);
-		if(m_Size < 1)
+		if (m_Size > 0)
 		{
-			it = TVector_iterator<T>(begin());
+			it = TVector_iterator<T>(&m_pElements[0], (&m_pElements[m_Size]));
 		}
+		
 		return it;
 	}
 
-	template <typename T>
-	TVector_iterator<T> TVector<T>::rbegin()
-	{
-		TVector_iterator<T> it(&m_pElements[m_Size-1]);
-		if(m_Size < 1)
-		{
-			it = TVector_iterator<T>(begin());
-		}
-		return it;
-	}
-
-	template <typename T>
-	TVector_iterator<T> TVector<T>::rend()
-	{
-		TVector_iterator<T> it(begin()-1);
-		return it;
-	}
-
-	template <typename T>
-	TVector_const_iterator<T> TVector<T>::begin() const
-	{
-		TVector_const_iterator<T> it(&m_pElements[0]);
-		return it;
-	}
-
-	template <typename T>
-	TVector_const_iterator<T> TVector<T>::end() const
-	{
-		TVector_const_iterator<T> it(&m_pElements[m_Size]);
-		if(m_Size < 1)
-		{
-			it = TVector_const_iterator<T>(begin());
-		}
-		return it;
-	}
-
-	template <typename T>
-	TVector_const_iterator<T> TVector<T>::rbegin() const
-	{
-		TVector_const_iterator<T> it(&m_pElements[m_Size-1]);
-		if(m_Size < 1)
-		{
-			it = TVector_const_iterator<T>(begin());
-		}
-		return it;
-	}
-
-	template <typename T>
-	TVector_const_iterator<T> TVector<T>::rend() const
-	{
-		TVector_const_iterator<T> it(begin()-1);
-		return it;
-	}
-
-	template <typename T>
+	template <class T>
 	void TVector<T>::reserve(uint32 _newCap)
 	{
-		if(m_Capacity < 1)
+		if (m_Capacity < 1)
 		{
 			m_pElements = new T[_newCap];
 			m_Capacity = _newCap;
 		}
 		else
 		{
-			if(_newCap > m_Capacity)
+			if (_newCap > m_Capacity)
 			{
 				T* tempElements = new T[_newCap];
-				for(uint32 i = 0; i < m_Size; ++i)
+				for (uint32 i = 0; i < m_Size; ++i)
 				{
 					tempElements[i] = m_pElements[i];
 				}
@@ -463,22 +380,22 @@ namespace CORE_LIB
 		}
 	}
 
-	template <typename T>
+	template <class T>
 	T & TVector<T>::operator[](uint32 _index)
 	{
 		return m_pElements[_index];
 	}
 
-	template <typename T>
+	template <class T>
 	const T & TVector<T>::operator[](uint32 _index) const
 	{
 		return m_pElements[_index];
 	}
 
-	template <typename T>
+	template <class T>
 	T & TVector<T>::at(uint32 _index)
 	{
-		if(_index > (m_Size - 1))
+		if (_index > (m_Size - 1))
 		{
 			throw std::out_of_range("Index out of range!");
 		}
@@ -486,17 +403,17 @@ namespace CORE_LIB
 		return m_pElements[_index];
 	}
 
-	template <typename T>
+	template <class T>
 	void TVector<T>::erase(uint32 _pos)
 	{
-		if(m_Size > 0 && _pos < m_Size)
+		if (m_Size > 0 && _pos < m_Size)
 		{
 			T* tempElements = new T[m_Size - 1];
 			uint32 i = 0;
 			uint32 j = 0;
-			while(j < m_Size)
+			while (j < m_Size)
 			{
-				if(j != _pos)
+				if (j != _pos)
 				{
 					tempElements[i++] = m_pElements[j++];
 				}
@@ -505,7 +422,7 @@ namespace CORE_LIB
 					++j;
 				}
 			}
-			delete [] m_pElements;
+			delete[] m_pElements;
 			m_pElements = tempElements;
 
 			--m_Size;
@@ -517,16 +434,16 @@ namespace CORE_LIB
 		}
 	}
 
-	template <typename T>
+	template <class T>
 	void TVector<T>::erase(TVector_iterator<T> _pos)
 	{
-		if(_pos >= begin() && _pos < end())
+		if (_pos >= begin() && _pos < end())
 		{
 			T* tempElements = new T[m_Size - 1];
 			int i = 0;
-			for(TVector_iterator<T> it = begin(); it != end(); ++it)
+			for (TVector_iterator<T> it = begin(); it != end(); ++it)
 			{
-				if(it != _pos)
+				if (it != _pos)
 				{
 					tempElements[i++] = *it;
 				}
