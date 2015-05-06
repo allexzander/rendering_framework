@@ -195,9 +195,9 @@ namespace CORE_LIB
 				{
 					return false;
 				}
-
-				return true;
 			}
+			
+			return true;
 		}
 
 		return false;
