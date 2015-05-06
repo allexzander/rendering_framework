@@ -20,17 +20,17 @@ namespace CORE_LIB
 	public:
 		const TCHAR* toConstChar() const;
 		TCHAR charAt(unsigned int at) const;
-		unsigned int size() const { return m_Size; }
+		size_t size() const { return m_Size; }
 		operator const TCHAR*() const;
 		operator double() const;
 		operator int() const;
 		//Statics
 	public:
-		static bool   isCharADigit(const char _ch);
+		static bool   isCharADigit(const TCHAR _ch);
 		static double toDouble(const String& _string);
 		static int toInt(const String& _string);
 	private:
 		TCHAR* m_Buffer;
-		unsigned int m_Size;
+		size_t m_Size;
 	};
 }; //CORE_LIB
