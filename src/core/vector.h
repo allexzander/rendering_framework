@@ -29,6 +29,7 @@ namespace CORE_LIB
 		}
 
 	private:
+		/*can be issued only inside TVector*/
 		TVector_iterator(T* _begin, T* _end) : m_pBegin(_begin),
 			m_pEnd(_end), m_pCurrentElement(nullptr)
 		{
@@ -55,7 +56,7 @@ namespace CORE_LIB
 			return *this;
 		}
 
-		/*++prefix operator*/
+		/*++operator*/
 		TVector_iterator& operator++()
 		{
 			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
@@ -74,7 +75,7 @@ namespace CORE_LIB
 			return *this;
 		}
 
-		/*postfix++ operator*/
+		/*operator++*/
 		TVector_iterator operator++(int)
 		{
 			TVector_iterator copySelf = *this;
@@ -129,6 +130,11 @@ namespace CORE_LIB
 			return *m_pCurrentElement;
 		}
 
+		T& operator->()
+		{
+			return *m_pCurrentElement;
+		}
+
 		bool operator!=(const TVector_iterator& _rhs)
 		{
 			return !(*this == _rhs);
@@ -158,6 +164,176 @@ namespace CORE_LIB
 		}
 
 		bool operator<=(const TVector_iterator& _rhs)
+		{
+			return *this == _rhs || *this < _rhs;
+		}
+
+		operator bool()
+		{
+			return (m_pBegin != nullptr && m_pEnd != nullptr
+				&& m_pCurrentElement != nullptr);
+		}
+
+	private:
+		T* m_pBegin;
+		T* m_pEnd;
+		T* m_pCurrentElement;
+	};
+
+	//CONST ITERATOR
+	template <class T>
+	class TVector_const_iterator
+	{
+		//allow TVector to create TVector_const_iterator instances
+		friend class TVector <T>;
+
+	public:
+		TVector_const_iterator() : m_pBegin(nullptr),
+			m_pEnd(nullptr), m_pCurrentElement(nullptr)
+		{
+		}
+
+		TVector_const_iterator(const TVector_const_iterator& it) : TVector_const_iterator()
+		{
+			m_pCurrentElement = m_pBegin = it.begin();
+			m_pEnd = it.end();
+		}
+
+	private:
+		TVector_const_iterator(T* _begin, T* _end) : m_pBegin(_begin),
+			m_pEnd(_end), m_pCurrentElement(nullptr)
+		{
+			m_pCurrentElement = m_pBegin;
+		}
+
+	public:
+		T* begin()	 const { return m_pBegin; }
+		T* end()	 const { return m_pEnd; }
+		T* current() const { return m_pCurrentElement; }
+
+		void reset()
+		{
+			if (m_pBegin && m_pEnd)
+			{
+				m_pCurrentElement = m_pBegin;
+			}
+		}
+
+		const TVector_const_iterator& operator=(const TVector_const_iterator& _rhs)
+		{
+			m_pCurrentElement = m_pBegin = _rhs.begin();
+			m_pEnd = _rhs.end();
+			return *this;
+		}
+
+		/*++prefix operator*/
+		TVector_const_iterator& operator++()
+		{
+			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
+
+			assert(isValid && "TVector_const_iterator operator++()");
+
+			if (isValid)
+			{
+				++m_pCurrentElement;
+				if (m_pCurrentElement == m_pEnd)
+				{
+					m_pCurrentElement = nullptr;
+				}
+			}
+
+			return *this;
+		}
+
+		/*postfix++ operator*/
+		TVector_const_iterator operator++(int)
+		{
+			TVector_const_iterator copySelf = *this;
+
+			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
+
+			assert(isValid && "TVector_const_iterator operator++(int)");
+
+			if (isValid)
+			{
+				++m_pCurrentElement;
+				if (m_pCurrentElement >= m_pEnd)
+				{
+					m_pCurrentElement = nullptr;
+				}
+			}
+
+			return copySelf;
+		}
+
+		TVector_const_iterator& operator+=(int32 _value)
+		{
+			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
+
+			assert(isValid && "TVector_const_iterator operator++(int)");
+
+			if (isValid)
+			{
+				m_pCurrentElement += _value;
+
+				if (m_pCurrentElement >= m_pEnd)
+				{
+					m_pCurrentElement = nullptr;
+
+				}
+			}
+
+			return *this;
+		}
+
+		TVector_const_iterator operator+(int32 _value)
+		{
+			TVector_const_iterator copy = *this;
+
+			copy += value;
+
+			return copy;
+		}
+
+		const T& operator*()
+		{
+			return *m_pCurrentElement;
+		}
+
+		const T& operator->()
+		{
+			return *m_pCurrentElement;
+		}
+
+		bool operator!=(const TVector_const_iterator& _rhs)
+		{
+			return !(*this == _rhs);
+		}
+
+		bool operator==(const TVector_const_iterator& _rhs)
+		{
+			return (m_pBegin == _rhs.begin() && m_pEnd == _rhs.end()
+				&& m_pCurrentElement == _rhs.current());
+		}
+
+		bool operator<(const TVector_const_iterator& _rhs)
+		{
+			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
+				&& m_pCurrentElement < _rhs.current());
+		}
+
+		bool operator>(const TVector_const_iterator& _rhs)
+		{
+			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
+				&& m_pCurrentElement < _rhs.current());
+		}
+
+		bool operator>=(const TVector_const_iterator& _rhs)
+		{
+			return *this == _rhs || *this > _rhs;
+		}
+
+		bool operator<=(const TVector_const_iterator& _rhs)
 		{
 			return *this == _rhs || *this < _rhs;
 		}
