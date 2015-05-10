@@ -18,7 +18,7 @@ namespace CORE_LIB
 		{
 		}
 
-		explicit String(const TCHAR* string);
+		String(const TCHAR* string);
 		String(const String& copy);
 		const String& operator=(const String& copy);
 		const String& operator=(const TCHAR* string);
@@ -36,14 +36,27 @@ namespace CORE_LIB
 		}
 		operator double() const;
 		operator int() const;
-		bool operator==(const String& rhs);
-		friend inline bool operator==(const String& lhs, const String& rhs)
+
+		friend bool operator==(const String& lhs, const TCHAR* string)
+		{
+			return String::isEqual(lhs, String(string));
+		}
+
+		friend bool operator==(const String& lhs, const String& rhs)
 		{
 			return isEqual(lhs, rhs);
 		}
+
+		friend bool operator==(const TCHAR* string, const String& rhs)
+		{
+			return String::isEqual(String(string), rhs);
+		}
+
 		bool operator<(const String& rhs);
 		bool operator>(const String& rhs);
-		const String operator+(const String& rhs);
+		friend String operator+(const String& lhs, const String& rhs);
+		friend String operator+(const TCHAR* string, const String& rhs);
+		friend String operator+(const String& lhs, const TCHAR* string);
 		String operator+=(const String& rhs);
 
 	public:

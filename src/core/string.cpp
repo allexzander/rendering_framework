@@ -105,23 +105,23 @@ namespace CORE_LIB
 		return *this;
 	}
 
-	const String String::operator+(const String& rhs)
+	String operator+(const String& lhs, const String& rhs)
 	{
 		String result;
 
-		if (m_Length > 0 || rhs.legth() > 0)
+		if (lhs.m_Length > 0 || rhs.m_Length > 0)
 		{
-			TCHAR* resChar = new TCHAR[this->legth() + rhs.legth()];
+			TCHAR* resChar = new TCHAR[lhs.m_Length + rhs.m_Length];
 
 			uint32 i = 0;
 
-			while (i < m_Length)
+			while (i < lhs.m_Length)
 			{
-				resChar[i] = m_Buffer[i];
+				resChar[i] = lhs.m_Buffer[i];
 				++i;
 			}
 
-			for (size_t j = 0; j < rhs.legth(); ++j)
+			for (size_t j = 0; j < rhs.m_Length; ++j)
 			{
 				resChar[i] = rhs[j];
 				++i;
@@ -133,6 +133,20 @@ namespace CORE_LIB
 		}
 
 		return result;
+	}
+
+	String operator+(const TCHAR* string, const String& rhs)
+	{
+		String lhs = string;
+
+		return (lhs + rhs);
+	}
+
+	String operator+(const String& lhs, const TCHAR* string)
+	{
+		String rhs = string;
+
+		return (lhs + rhs);
 	}
 
 	String String::operator+=(const String& rhs)
@@ -213,11 +227,6 @@ namespace CORE_LIB
 	String::operator int() const
 	{
 		return toInt(*this);
-	}
-
-	bool String::operator==(const String& rhs)
-	{
-		return isEqual(*this, rhs);
 	}
 
 	bool String::operator<(const String& rhs)
