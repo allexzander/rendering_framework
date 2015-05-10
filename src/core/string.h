@@ -15,9 +15,7 @@ namespace CORE_LIB
 	{
 	public:
 		String() :m_Buffer(nullptr), m_Length(0)
-		{
-		}
-
+		{}
 		String(const TCHAR* string);
 		String(const String& copy);
 		const String& operator=(const String& copy);
@@ -39,7 +37,8 @@ namespace CORE_LIB
 
 		friend bool operator==(const String& lhs, const TCHAR* string)
 		{
-			return String::isEqual(lhs, String(string));
+			String rhs = String(string);
+			return lhs == rhs;
 		}
 
 		friend bool operator==(const String& lhs, const String& rhs)
@@ -52,12 +51,59 @@ namespace CORE_LIB
 			return String::isEqual(String(string), rhs);
 		}
 
-		bool operator<(const String& rhs);
-		bool operator>(const String& rhs);
+		friend bool operator<(const String& lhs, const String& rhs)
+		{
+			return String::isLesser(lhs, rhs);
+		}
+
+		friend bool operator<(const TCHAR* string, const String& rhs)
+		{
+			String lhs = string;
+			return lhs < rhs;
+		}
+
+		friend bool operator<(const String& lhs, const TCHAR* string)
+		{
+			String rhs = string;
+			return lhs < rhs;
+		}
+
+		friend bool operator>(const String& lhs, const String& rhs)
+		{
+			return !(lhs < rhs) && !(lhs == rhs);
+		}
+
+		friend bool operator>(const String& lhs, const TCHAR* string)
+		{
+			String rhs = string;
+			return lhs > rhs;
+		}
+
+		friend bool operator>(const TCHAR* string, const String& rhs)
+		{
+			String lhs = string;
+			return lhs > rhs;
+		}
+
 		friend String operator+(const String& lhs, const String& rhs);
-		friend String operator+(const TCHAR* string, const String& rhs);
-		friend String operator+(const String& lhs, const TCHAR* string);
-		String operator+=(const String& rhs);
+
+		friend String operator+(const TCHAR* string, const String& rhs)
+		{
+			String lhs = string;
+			return (lhs + rhs);
+		}
+
+		friend String operator+(const String& lhs, const TCHAR* string)
+		{
+			String rhs = string;
+			return (lhs + rhs);
+		}
+
+		String operator+=(const String& rhs)
+		{
+			*this = *this + rhs;
+			return *this;
+		}
 
 	public:
 		static bool   isCharADigit(const TCHAR _ch);

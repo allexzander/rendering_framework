@@ -135,27 +135,6 @@ namespace CORE_LIB
 		return result;
 	}
 
-	String operator+(const TCHAR* string, const String& rhs)
-	{
-		String lhs = string;
-
-		return (lhs + rhs);
-	}
-
-	String operator+(const String& lhs, const TCHAR* string)
-	{
-		String rhs = string;
-
-		return (lhs + rhs);
-	}
-
-	String String::operator+=(const String& rhs)
-	{
-		*this = *this + rhs;
-
-		return *this;
-	}
-
 	const TCHAR* String::toConstChar() const
 	{
 		return m_Buffer;
@@ -227,16 +206,6 @@ namespace CORE_LIB
 	String::operator int() const
 	{
 		return toInt(*this);
-	}
-
-	bool String::operator<(const String& rhs)
-	{
-		return isLesser(*this, rhs);
-	}
-
-	bool String::operator>(const String& rhs)
-	{
-		return (!isEqual(*this, rhs) && !isLesser(*this, rhs));
 	}
 
 	bool String::isCharADigit(const TCHAR _ch)
