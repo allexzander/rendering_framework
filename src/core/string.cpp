@@ -1,18 +1,11 @@
 #include "string.h"
-#include "commondefs.h"
+#include <assert.h>
 
 namespace CORE_LIB
 {
-	String::String() : m_Buffer(nullptr), m_Size(0)
+	String::String(const TCHAR* string) : m_Buffer(nullptr), m_Length(0)
 	{
-		m_Buffer = new TCHAR[1];
-		m_Buffer[0] = 0;
-		m_Size = 0;
-	}
-
-	String::String(const TCHAR* string) : m_Buffer(nullptr), m_Size(0)
-	{
-		uint32 len = 0;
+		size_t len = 0;
 
 		while (string[len] != '\0')
 		{
@@ -23,71 +16,59 @@ namespace CORE_LIB
 		{
 			m_Buffer = new TCHAR[len + 1];
 
-			for (unsigned i = 0; i < len; ++i)
+			for (size_t i = 0; i < len; ++i)
 			{
 				m_Buffer[i] = string[i];
 			}
 
 			m_Buffer[len] = '\0';
-
-			m_Size = len;
+			m_Length	  = len;
 		}
 	}
 
 	String::String(const String& copy) :String()
 	{
-		if (copy.size() > 0)
+		if (copy.legth() > 0)
 		{
-			m_Size = 0;
+			m_Length = copy.legth();
+			m_Buffer = new TCHAR[m_Length + 1];
 
-			if (m_Buffer != nullptr)
+			for (size_t i = 0; i < m_Length; ++i)
 			{
-				delete[] m_Buffer;
+				m_Buffer[i] = copy[i];
 			}
 
-			m_Buffer = new TCHAR[copy.size() + 1];
-
-			for (uint32 i = 0; i < static_cast<uint32>(copy.size()); ++i)
-			{
-				m_Buffer[i] = copy.charAt(i);
-			}
-
-			m_Size = copy.size();
-
-			m_Buffer[m_Size] = '\0';
+			m_Buffer[m_Length] = '\0';
 		}
 	}
 
 	String::~String()
 	{
-		if (m_Size > 0)
+		if (legth() > 0)
 		{
 			delete[] m_Buffer;
-			m_Size = 0;
+			m_Length = 0;
 		}
 	}
 
 	const String& String::operator=(const String& copy)
 	{
-		if (copy.size() > 0)
+		if (copy.legth() > 0)
 		{
 			if (m_Buffer)
 			{
 				delete[] m_Buffer;
 			}
 
-			m_Size = 0;
+			m_Length = copy.legth();
+			m_Buffer = new TCHAR[m_Length + 1];
 
-			m_Buffer = new TCHAR[copy.size() + 1];
-
-			for (uint32 i = 0; i < copy.size(); ++i)
+			for (size_t i = 0; i < m_Length; ++i)
 			{
-				m_Buffer[i] = copy.charAt(i);
+				m_Buffer[i] = copy[i];
 			}
 
-			m_Buffer[copy.size()] = '\0';
-
-			m_Size = copy.size();
+			m_Buffer[m_Length] = '\0';
 		}
 
 		return *this;
@@ -95,7 +76,7 @@ namespace CORE_LIB
 
 	const String& String::operator=(const TCHAR* string)
 	{
-		uint32 len = 0;
+		size_t len = 0;
 
 		while (string[len] != '\0')
 		{
@@ -104,40 +85,45 @@ namespace CORE_LIB
 
 		if (len > 0)
 		{
+			if (m_Buffer)
+			{
+				delete[] m_Buffer;
+			}
+
 			m_Buffer = new TCHAR[len + 1];
 
-			for (unsigned i = 0; i < len; ++i)
+			for (size_t i = 0; i < len; ++i)
 			{
 				m_Buffer[i] = string[i];
 			}
 
 			m_Buffer[len] = '\0';
 
-			m_Size = len;
+			m_Length = len;
 		}
 
 		return *this;
 	}
 
-	String String::operator+(const String& rhs)
+	const String String::operator+(const String& rhs)
 	{
 		String result;
 
-		if (rhs.size() > 0)
+		if (m_Length > 0 || rhs.legth() > 0)
 		{
-			TCHAR* resChar = new TCHAR[this->size() + rhs.size()];
+			TCHAR* resChar = new TCHAR[this->legth() + rhs.legth()];
 
 			uint32 i = 0;
 
-			while (i < m_Size)
+			while (i < m_Length)
 			{
 				resChar[i] = m_Buffer[i];
 				++i;
 			}
 
-			for (uint32 j = 0; j < rhs.size(); ++j)
+			for (size_t j = 0; j < rhs.legth(); ++j)
 			{
-				resChar[i] = rhs.charAt(j);
+				resChar[i] = rhs[j];
 				++i;
 			}
 
@@ -163,12 +149,55 @@ namespace CORE_LIB
 
 	TCHAR String::charAt(uint32 at) const
 	{
-		if (m_Buffer != nullptr && at >= 0 && at < m_Size)
+		if (m_Buffer != nullptr && at >= 0 && at < m_Length)
 		{
 			return m_Buffer[at];
 		}
+		else
+		{
+			assert("Wrong index 'at' charAt");
+		}
 
 		return 0;
+	}
+
+	const String& String::erase(uint32 at, uint32 count)
+	{
+		if (m_Length > 0)
+		{
+			if (count < m_Length)
+			{
+				TCHAR* erased = new TCHAR[m_Length - count + 1];
+
+				size_t j = 0;
+
+				for (size_t i = 0; i < m_Length; ++i)
+				{
+					if (i < at || i >(at + count - 1))
+					{
+						erased[j] = m_Buffer[i];
+						++j;
+					}
+				}
+
+				erased[j] = '\0';
+
+				if (m_Buffer)
+				{
+					delete[] m_Buffer;
+				}
+
+				m_Buffer = erased;
+				m_Length = j;
+			}
+			else if (count == m_Length)
+			{
+				delete[] m_Buffer;
+				m_Length = 0;
+			}
+		}
+		
+		return *this;
 	}
 
 	String::operator const TCHAR*() const
@@ -186,7 +215,7 @@ namespace CORE_LIB
 		return toInt(*this);
 	}
 
-	bool String::operator == (const String& rhs)
+	bool String::operator==(const String& rhs)
 	{
 		return isEqual(*this, rhs);
 	}
@@ -215,21 +244,30 @@ namespace CORE_LIB
 	{
 		double result = 0.0;
 
-		if (_string.size() > 0)
+		if (_string.legth() > 0)
 		{
-			bool isNegative	= (_string.charAt(0) == '-');
+			String copy = _string;
+
+			bool isNegative = copy.charAt(0) == _T('-');
+
+			if (isNegative)
+			{
+				copy.erase(0, 1);
+			}
+
 			bool isFractionalPart = false;
 			uint32 fracPart = 0;
 			uint32 fractionalPartDivisor = 1;
 
-			for (uint32 i = (isNegative) ? 1 : 0; i < static_cast<uint32>(_string.size()); ++i)
+			for (size_t i = 0; i < copy.legth(); ++i)
 			{
-				TCHAR ch = _string.charAt(i);
+				TCHAR ch = copy[i];
 
 				if (ch == '.')
 				{
 					if (i == 0 || isFractionalPart)
 					{
+						assert(false && "Error! Convert String to double failed!!!");
 						return 0;
 					}
 
@@ -239,6 +277,7 @@ namespace CORE_LIB
 
 				if (!isCharADigit(ch))
 				{
+					assert(false && "Error! Convert String to double failed!!!");
 					return 0;
 				}
 
@@ -266,14 +305,51 @@ namespace CORE_LIB
 
 	int String::toInt(const String& _string)
 	{
-		return static_cast<int>(toDouble(_string));
+		int32 result = 0;
+
+		if (_string.legth() > 0)
+		{
+			String copy = _string;
+
+			bool isNegative = copy.charAt(0) == _T('-');
+
+			if (isNegative)
+			{
+				copy.erase(0, 1);
+			}
+
+			for (size_t i = 0; i < copy.legth(); ++i)
+			{
+				TCHAR ch = copy[i];
+
+				if (!isCharADigit(ch))
+				{
+					if (!(ch == '.' && i != 0))
+					{
+						result = 0;
+						assert(false && "Error! Convert String to int failed!!!");
+					}
+
+					break;
+				}
+
+				result = (result * 10) + (ch - '0');
+			}
+
+			if (isNegative)
+			{
+				result = -result;
+			}
+		}
+
+		return result;
 	}
 
 	bool String::isEqual(const String& _string1, const String& _string2)
 	{
-		if (_string1.size() == _string2.size())
+		if (_string1.legth() == _string2.legth())
 		{
-			for (uint32 i = 0; i < static_cast<uint32>(_string1.size()); ++i)
+			for (uint32 i = 0; i < static_cast<uint32>(_string1.legth()); ++i)
 			{
 				if (_string1.charAt(i) != _string2.charAt(i))
 				{
@@ -289,19 +365,19 @@ namespace CORE_LIB
 
 	bool String::isLesser(const String& _string1, const String& _string2)
 	{
-		if((_string1.size() == 0 && _string2.size() == 0) || _string2.size() <= _string1.size())
+		if((_string1.legth() == 0 && _string2.legth() == 0) || _string2.legth() <= _string1.legth())
 		{
 			return false;
 		}
 		
-		if(_string1.size() < _string2.size())
+		if(_string1.legth() < _string2.legth())
 		{
 			//Left sting is shorter. Return without further comparison.
 			return true;
 		}
 		
 	
-		for (uint32 i = 0; i < static_cast<uint32>(_string1.size()); ++i)
+		for (uint32 i = 0; i < static_cast<uint32>(_string1.legth()); ++i)
 		{
 			if (_string1.charAt(i) < _string2.charAt(i))
 			{
