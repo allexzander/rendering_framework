@@ -26,6 +26,12 @@ bool testString()
 
 	String smallString = _T("small");
 
+	String toBeCleared = String(_T("Still dirty"));
+	String shouldBeTrimmed1 = String(_T("            I am here!"));
+	String shouldBeTrimmed2 = String(_T("    And I am here!"));
+	String wantBeTrimmed = _T("Maybe                 other time?");
+	String iHaveNoSence = _T("                                                     ");
+
 
 	bool testStringToDouble = (static_cast<double>(doubleString1) == 12456.04242) && (static_cast<double>(doubleString2) == -5535123456.04242) &&
 		(static_cast<double>(doubleString3) == 0.0353532) && static_cast<double>(doubleString4) == -0.0353532;
@@ -45,10 +51,14 @@ bool testString()
 	const TCHAR* toConstChar = a.toConstChar();
 	const TCHAR* toConstCharOperator = a;
 	bool testToConstChar = _tccmp(_T("This is a string "), toConstChar) == 0 && _tccmp(toConstCharOperator, _T("This is a string ")) == 0;
+	toBeCleared.clear();
+	bool testClear = toBeCleared.legth() == 0;
+	bool testTrim = _T("Maybe                 other time?") == wantBeTrimmed.trim() && shouldBeTrimmed1.trim() == _T("I am here!")
+		&& shouldBeTrimmed2.trim() == _T("And I am here!") && iHaveNoSence.trim().legth() == 0;
 
 	bool testResult = testConcat && testConcatAndAssign && testErase && testStringToDouble
 		&& testCopyConstructAndAssignment && testLengthIsValid && testAssignmentOperator && testLesserGreaterEqual
-		&& testToConstChar;
+		&& testToConstChar && testClear && testTrim;
 	assert(testResult && "Error!!! testString has failed");
 
 	return testResult;

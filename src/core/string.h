@@ -27,6 +27,8 @@ namespace CORE_LIB
 		TCHAR charAt(uint32 at) const;
 		size_t legth() const { return m_Length; }
 		const String& erase(uint32 at, uint32 count = 1);
+		String trim();
+		void clear();
 		operator const TCHAR*() const;
 		const TCHAR operator[](uint32 at) const
 		{

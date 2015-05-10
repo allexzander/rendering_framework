@@ -193,6 +193,40 @@ namespace CORE_LIB
 		return *this;
 	}
 
+	String String::trim()
+	{
+		if (m_Length > 0 && m_Buffer[0] == _T(' '))
+		{
+			size_t trimCount = 0;
+
+			while (m_Buffer[trimCount] == _T(' ') && trimCount < m_Length)
+			{
+				++trimCount;
+			}
+
+			if (trimCount == m_Length)
+			{
+				clear();
+			}
+			else
+			{
+				erase(0, trimCount);
+			}
+		}
+
+		return *this;
+	}
+
+	void String::clear()
+	{
+		if (m_Length > 0 && m_Buffer != nullptr)
+		{
+			delete[] m_Buffer;
+			m_Buffer = nullptr;
+			m_Length = 0;
+		}
+	}
+
 	String::operator const TCHAR*() const
 	{
 		return toConstChar();
