@@ -227,6 +227,42 @@ namespace CORE_LIB
 		}
 	}
 
+	bool String::startsWith(const String& pattern) const
+	{
+		if (m_Length > 0 && pattern.legth() > 0 && pattern.legth() <= m_Length)
+		{
+			for (size_t i = 0; i < pattern.legth(); ++i)
+			{
+				if (m_Buffer[i] != pattern[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	bool String::endsWith(const String& pattern) const
+	{
+		if (m_Length > 0 && pattern.legth() > 0 && pattern.legth() <= m_Length)
+		{
+			for (int i = m_Length - 1, j = pattern.legth() - 1; i >= 0, j >= 0; --i, --j)
+			{
+				if (m_Buffer[i] != pattern[static_cast<size_t>(j)])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 	String::operator const TCHAR*() const
 	{
 		return toConstChar();

@@ -57,10 +57,12 @@ bool testString()
 		&& shouldBeTrimmed2.trim() == _T("And I am here!") && iHaveNoSence.trim().legth() == 0;
 	bool testConcatSingleChar = String(_T("temp_strin")) + _T('g') == _T("temp_string")
 		&& _T('b') + String(_T("eginEnd")) == String(_T("beginEnd"));
+	bool testStartsWith = wantBeTrimmed.startsWith(_T("Maybe")) && smallString.startsWith(String(_T("sm")));
+	bool testEndsWith = wantBeTrimmed.endsWith(_T("time?")) && equal2.endsWith(_T("win!"));
 
 	bool testResult = testConcat && testConcatAndAssign && testErase && testStringToDouble
 		&& testCopyConstructAndAssignment && testLengthIsValid && testAssignmentOperator && testLesserGreaterEqual
-		&& testToConstChar && testClear && testTrim && testConcatSingleChar;
+		&& testToConstChar && testClear && testTrim && testConcatSingleChar && testStartsWith && testEndsWith;
 	assert(testResult && "Error!!! testString has failed");
 
 	return testResult;

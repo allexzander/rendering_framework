@@ -29,6 +29,8 @@ namespace CORE_LIB
 		const String& erase(uint32 at, uint32 count = 1);
 		String trim();
 		void clear();
+		bool startsWith(const String& pattern) const;
+		bool endsWith(const String& pattern) const;
 		operator const TCHAR*() const;
 		const TCHAR operator[](uint32 at) const
 		{
