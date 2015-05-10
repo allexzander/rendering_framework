@@ -101,6 +101,26 @@ namespace CORE_LIB
 			return (lhs + rhs);
 		}
 
+		friend String operator+(const String& lhs, const TCHAR c)
+		{
+			TCHAR* string = new TCHAR[2];
+			string[0] = c;
+			string[1] = '\0';
+			String rhs = string;
+			delete[] string;
+			return (lhs + rhs);
+		}
+
+		friend String operator+(const TCHAR c, const String& rhs)
+		{
+			TCHAR* string = new TCHAR[2];
+			string[0] = c;
+			string[1] = '\0';
+			String lhs = string;
+			delete[] string;
+			return (lhs + rhs);
+		}
+
 		String operator+=(const String& rhs)
 		{
 			*this = *this + rhs;

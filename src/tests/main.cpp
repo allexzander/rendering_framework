@@ -55,10 +55,12 @@ bool testString()
 	bool testClear = toBeCleared.legth() == 0;
 	bool testTrim = _T("Maybe                 other time?") == wantBeTrimmed.trim() && shouldBeTrimmed1.trim() == _T("I am here!")
 		&& shouldBeTrimmed2.trim() == _T("And I am here!") && iHaveNoSence.trim().legth() == 0;
+	bool testConcatSingleChar = String(_T("temp_strin")) + _T('g') == _T("temp_string")
+		&& _T('b') + String(_T("eginEnd")) == String(_T("beginEnd"));
 
 	bool testResult = testConcat && testConcatAndAssign && testErase && testStringToDouble
 		&& testCopyConstructAndAssignment && testLengthIsValid && testAssignmentOperator && testLesserGreaterEqual
-		&& testToConstChar && testClear && testTrim;
+		&& testToConstChar && testClear && testTrim && testConcatSingleChar;
 	assert(testResult && "Error!!! testString has failed");
 
 	return testResult;
