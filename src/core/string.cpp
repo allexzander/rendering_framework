@@ -44,11 +44,7 @@ namespace CORE_LIB
 
 	String::~String()
 	{
-		if (legth() > 0)
-		{
-			delete[] m_Buffer;
-			m_Length = 0;
-		}
+		clear();
 	}
 
 	const String& String::operator=(const String& copy)
