@@ -69,6 +69,90 @@ namespace CORE_LIB
 
 	const String& String::operator=(const String& copy)
 	{
+		if (copy.size() > 0)
+		{
+			if (m_Buffer)
+			{
+				delete[] m_Buffer;
+			}
+
+			m_Size = 0;
+
+			m_Buffer = new TCHAR[copy.size() + 1];
+
+			for (uint32 i = 0; i < copy.size(); ++i)
+			{
+				m_Buffer[i] = copy.charAt(i);
+			}
+
+			m_Buffer[copy.size()] = '\0';
+
+			m_Size = copy.size();
+		}
+
+		return *this;
+	}
+
+	const String& String::operator=(const TCHAR* string)
+	{
+		uint32 len = 0;
+
+		while (string[len] != '\0')
+		{
+			++len;
+		}
+
+		if (len > 0)
+		{
+			m_Buffer = new TCHAR[len + 1];
+
+			for (unsigned i = 0; i < len; ++i)
+			{
+				m_Buffer[i] = string[i];
+			}
+
+			m_Buffer[len] = '\0';
+
+			m_Size = len;
+		}
+
+		return *this;
+	}
+
+	String String::operator+(const String& rhs)
+	{
+		String result;
+
+		if (rhs.size() > 0)
+		{
+			TCHAR* resChar = new TCHAR[this->size() + rhs.size()];
+
+			uint32 i = 0;
+
+			while (i < m_Size)
+			{
+				resChar[i] = m_Buffer[i];
+				++i;
+			}
+
+			for (uint32 j = 0; j < rhs.size(); ++j)
+			{
+				resChar[i] = rhs.charAt(j);
+				++i;
+			}
+
+			resChar[i] = '\0';
+
+			result = resChar;
+		}
+
+		return result;
+	}
+
+	String String::operator+=(const String& rhs)
+	{
+		*this = *this + rhs;
+
 		return *this;
 	}
 

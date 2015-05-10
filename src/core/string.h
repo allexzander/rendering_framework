@@ -16,6 +16,7 @@ namespace CORE_LIB
 		String(const TCHAR* string);
 		String(const String& copy);
 		const String& operator=(const String& copy);
+		const String& operator=(const TCHAR* string);
 		~String();
 	public:
 		const TCHAR* toConstChar() const;
@@ -27,6 +28,8 @@ namespace CORE_LIB
 		bool operator==(const String& rhs);
 		bool operator<(const String& rhs);
 		bool operator>(const String& rhs);
+		String operator+(const String& rhs);
+		String operator+=(const String& rhs);
 		//Statics
 	public:
 		static bool   isCharADigit(const TCHAR _ch);

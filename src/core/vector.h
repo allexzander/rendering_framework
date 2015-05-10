@@ -2,7 +2,6 @@
 
 #include <stdexcept>
 #include <assert.h>
-
 #include "commondefs.h"
 
 namespace CORE_LIB
@@ -374,7 +373,8 @@ namespace CORE_LIB
 		const T& front();
 		const T& back();
 
-		TVector_iterator<T> getIterator();
+		TVector_iterator<T> iterator() const;
+		TVector_const_iterator<T> constIterator() const;
 
 		void reserve(uint32 _newCap);
 
@@ -518,7 +518,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector_iterator<T> TVector<T>::getIterator()
+	TVector_iterator<T> TVector<T>::iterator() const
 	{
 		TVector_iterator<T> it;
 
@@ -527,6 +527,19 @@ namespace CORE_LIB
 			it = TVector_iterator<T>(&m_pElements[0], (&m_pElements[m_Size]));
 		}
 		
+		return it;
+	}
+
+	template <class T>
+	TVector_const_iterator<T> TVector<T>::constIterator() const
+	{
+		TVector_const_iterator<T> it;
+
+		if (m_Size > 0)
+		{
+			it = TVector_const_iterator<T>(&m_pElements[0], (&m_pElements[m_Size]));
+		}
+
 		return it;
 	}
 
