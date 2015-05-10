@@ -37,6 +37,10 @@ namespace CORE_LIB
 		operator double() const;
 		operator int() const;
 		bool operator==(const String& rhs);
+		friend inline bool operator==(const String& lhs, const String& rhs)
+		{
+			return isEqual(lhs, rhs);
+		}
 		bool operator<(const String& rhs);
 		bool operator>(const String& rhs);
 		const String operator+(const String& rhs);
