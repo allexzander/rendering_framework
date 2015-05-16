@@ -3,7 +3,7 @@
 
 namespace CORE_LIB
 {
-	String::String(const TCHAR* string) : m_Buffer(nullptr), m_Length(0)
+	String::String(const TCHAR* string) : m_pBuffer(nullptr), m_Length(0)
 	{
 		size_t len = 0;
 
@@ -14,31 +14,31 @@ namespace CORE_LIB
 
 		if (len > 0)
 		{
-			m_Buffer = new TCHAR[len + 1];
+			m_pBuffer = new TCHAR[len + 1];
 
 			for (size_t i = 0; i < len; ++i)
 			{
-				m_Buffer[i] = string[i];
+				m_pBuffer[i] = string[i];
 			}
 
-			m_Buffer[len] = '\0';
-			m_Length	  = len;
+			m_pBuffer[len] = '\0';
+			m_Length	   = len;
 		}
 	}
 
-	String::String(const String& copy) :String()
+	String::String(const String& _copy) : String()
 	{
-		if (copy.legth() > 0)
+		if (_copy.legth() > 0)
 		{
-			m_Length = copy.legth();
-			m_Buffer = new TCHAR[m_Length + 1];
+			m_Length  = _copy.legth();
+			m_pBuffer = new TCHAR[m_Length + 1];
 
 			for (size_t i = 0; i < m_Length; ++i)
 			{
-				m_Buffer[i] = copy[i];
+				m_pBuffer[i] = _copy[i];
 			}
 
-			m_Buffer[m_Length] = '\0';
+			m_pBuffer[m_Length] = '\0';
 		}
 	}
 
@@ -47,85 +47,85 @@ namespace CORE_LIB
 		clear();
 	}
 
-	const String& String::operator=(const String& copy)
+	const String& String::operator=(const String& _copy)
 	{
-		if (copy.legth() > 0)
+		if (_copy.legth() > 0)
 		{
-			if (m_Buffer)
+			if (m_pBuffer)
 			{
-				delete[] m_Buffer;
+				delete[] m_pBuffer;
 			}
 
-			m_Length = copy.legth();
-			m_Buffer = new TCHAR[m_Length + 1];
+			m_Length  = _copy.legth();
+			m_pBuffer = new TCHAR[m_Length + 1];
 
 			for (size_t i = 0; i < m_Length; ++i)
 			{
-				m_Buffer[i] = copy[i];
+				m_pBuffer[i] = _copy[i];
 			}
 
-			m_Buffer[m_Length] = '\0';
+			m_pBuffer[m_Length] = '\0';
 		}
 
 		return *this;
 	}
 
-	const String& String::operator=(const TCHAR* string)
+	const String& String::operator=(const TCHAR* _string)
 	{
 		size_t len = 0;
 
-		while (string[len] != '\0')
+		while (_string[len] != '\0')
 		{
 			++len;
 		}
 
 		if (len > 0)
 		{
-			if (m_Buffer)
+			if (m_pBuffer)
 			{
-				delete[] m_Buffer;
+				delete[] m_pBuffer;
 			}
 
-			m_Buffer = new TCHAR[len + 1];
+			m_pBuffer = new TCHAR[len + 1];
 
 			for (size_t i = 0; i < len; ++i)
 			{
-				m_Buffer[i] = string[i];
+				m_pBuffer[i] = _string[i];
 			}
 
-			m_Buffer[len] = '\0';
+			m_pBuffer[len] = '\0';
 
-			m_Length = len;
+			m_Length	   = len;
 		}
 
 		return *this;
 	}
 
-	String operator+(const String& lhs, const String& rhs)
+	String operator+(const String& _lhs, const String& _rhs)
 	{
 		String result;
 
-		if (lhs.m_Length > 0 || rhs.m_Length > 0)
+		if (_lhs.m_Length > 0 || _rhs.m_Length > 0)
 		{
-			TCHAR* resChar = new TCHAR[lhs.m_Length + rhs.m_Length];
+			TCHAR* buffer = new TCHAR[_lhs.m_Length + _rhs.m_Length];
 
-			uint32 i = 0;
+			size_t i = 0;
 
-			while (i < lhs.m_Length)
+			while (i < _lhs.m_Length)
 			{
-				resChar[i] = lhs.m_Buffer[i];
+				buffer[i] = _lhs.m_pBuffer[i];
 				++i;
 			}
 
-			for (size_t j = 0; j < rhs.m_Length; ++j)
+			for (size_t j = 0; j < _rhs.m_Length; ++j)
 			{
-				resChar[i] = rhs[j];
+				buffer[i] = _rhs[j];
 				++i;
 			}
 
-			resChar[i] = '\0';
+			buffer[i] = '\0';
 
-			result = resChar;
+			result = buffer;
 		}
 
 		return result;
@@ -133,69 +133,67 @@ namespace CORE_LIB
 
 	const TCHAR* String::toConstChar() const
 	{
-		return m_Buffer;
+		assert(m_pBuffer != nullptr && "m_pBuffer != nullptr");
+		return m_pBuffer;
 	}
 
-	TCHAR String::charAt(uint32 at) const
+	TCHAR String::charAt(uint32 _at) const
 	{
-		if (m_Buffer != nullptr && at >= 0 && at < m_Length)
-		{
-			return m_Buffer[at];
-		}
-		else
-		{
-			assert("Wrong index 'at' charAt");
-		}
+		assert(m_pBuffer != nullptr && "m_pBuffer != nullptr");
+		assert(_at >= 0 && _at < m_Length && "Index out of range!!!");
 
-		return 0;
+		return m_pBuffer[_at];
 	}
 
-	const String& String::erase(uint32 at, uint32 count)
+	const String& String::erase(uint32 _at, uint32 _count)
 	{
-		if (m_Length > 0)
+		assert(m_Length > 0 && "String is empty!!!");
+
+		if(_count == m_Length)
 		{
-			if (count < m_Length)
-			{
-				TCHAR* erased = new TCHAR[m_Length - count + 1];
-
-				size_t j = 0;
-
-				for (size_t i = 0; i < m_Length; ++i)
-				{
-					if (i < at || i >(at + count - 1))
-					{
-						erased[j] = m_Buffer[i];
-						++j;
-					}
-				}
-
-				erased[j] = '\0';
-
-				if (m_Buffer)
-				{
-					delete[] m_Buffer;
-				}
-
-				m_Buffer = erased;
-				m_Length = j;
-			}
-			else if (count == m_Length)
-			{
-				delete[] m_Buffer;
-				m_Length = 0;
-			}
+			clear();
+			return *this;
 		}
-		
+
+		if (_count < m_Length)
+		{
+			TCHAR* erasedBuffer = new TCHAR[(m_Length - _count) + 1];
+
+			size_t j = 0;
+
+			size_t lowerBound =  _at;
+			size_t upperBound = _at + _count - 1;
+
+			for (size_t i = 0; i < m_Length; ++i)
+			{
+				if (i < lowerBound || i > upperBound)
+				{
+					erasedBuffer[j] = m_pBuffer[i];
+					++j;
+				}
+			}
+
+			erasedBuffer[j] = '\0';
+
+			if (m_pBuffer)
+			{
+				delete[] m_pBuffer;
+			}
+
+			m_pBuffer = erasedBuffer;
+			m_Length  = j;
+		}
+
 		return *this;
 	}
 
 	String String::trim()
 	{
-		if (m_Length > 0 && m_Buffer[0] == _T(' '))
+		if (m_Length > 0 && m_pBuffer[0] == _T(' '))
 		{
 			size_t trimCount = 0;
 
-			while (m_Buffer[trimCount] == _T(' ') && trimCount < m_Length)
+			while (m_pBuffer[trimCount] == _T(' ') && trimCount < m_Length)
 			{
 				++trimCount;
 			}
@@ -215,21 +213,21 @@ namespace CORE_LIB
 
 	void String::clear()
 	{
-		if (m_Length > 0 && m_Buffer != nullptr)
+		if (m_Length > 0 && m_pBuffer != nullptr)
 		{
-			delete[] m_Buffer;
-			m_Buffer = nullptr;
-			m_Length = 0;
+			delete[] m_pBuffer;
+			m_pBuffer = nullptr;
+			m_Length  = 0;
 		}
 	}
 
-	bool String::startsWith(const String& pattern) const
+	bool String::startsWith(const String& _pattern) const
 	{
-		if (m_Length > 0 && pattern.legth() > 0 && pattern.legth() <= m_Length)
+		if (m_Length > 0 && _pattern.legth() > 0 && _pattern.legth() <= m_Length)
 		{
-			for (size_t i = 0; i < pattern.legth(); ++i)
+			for (size_t i = 0; i < _pattern.legth(); ++i)
 			{
-				if (m_Buffer[i] != pattern[i])
+				if (m_pBuffer[i] != _pattern[i])
 				{
 					return false;
 				}
@@ -241,13 +239,13 @@ namespace CORE_LIB
 		return false;
 	}
 
-	bool String::endsWith(const String& pattern) const
+	bool String::endsWith(const String& _pattern) const
 	{
-		if (m_Length > 0 && pattern.legth() > 0 && pattern.legth() <= m_Length)
+		if (m_Length > 0 && _pattern.legth() > 0 && _pattern.legth() <= m_Length)
 		{
-			for (int i = m_Length - 1, j = pattern.legth() - 1; i >= 0, j >= 0; --i, --j)
+			for (int i = m_Length - 1, j = _pattern.legth() - 1; i >= 0, j >= 0; --i, --j)
 			{
-				if (m_Buffer[i] != pattern[static_cast<size_t>(j)])
+				if (m_pBuffer[i] != _pattern[static_cast<size_t>(j)])
 				{
 					return false;
 				}
@@ -286,12 +284,13 @@ namespace CORE_LIB
 
 	double String::toDouble(const String& _string)
 	{
+		assert(_string.legth() > 0 && "_string.legth() > 0");
+
 		double result = 0.0;
 
 		if (_string.legth() > 0)
 		{
-			String copy = _string;
-
+			auto copy		= _string;
 			bool isNegative = copy.charAt(0) == _T('-');
 
 			if (isNegative)
@@ -299,19 +298,19 @@ namespace CORE_LIB
 				copy.erase(0, 1);
 			}
 
-			bool isFractionalPart = false;
-			uint32 fracPart = 0;
+			bool isFractionalPart		 = false;
+			uint32 fracPart				 = 0;
 			uint32 fractionalPartDivisor = 1;
 
 			for (size_t i = 0; i < copy.legth(); ++i)
 			{
-				TCHAR ch = copy[i];
+				auto ch = copy[i];
 
 				if (ch == '.')
 				{
 					if (i == 0 || isFractionalPart)
 					{
-						assert(false && "Error! Convert String to double failed!!!");
+						assert(false && "Error! Incorrect string!!!");
 						return 0;
 					}
 
@@ -321,7 +320,7 @@ namespace CORE_LIB
 
 				if (!isCharADigit(ch))
 				{
-					assert(false && "Error! Convert String to double failed!!!");
+					assert(false && "Error! Incorrect string!!!");
 					return 0;
 				}
 
@@ -336,7 +335,8 @@ namespace CORE_LIB
 				}
 			}
 
-			result += fracPart / static_cast<double>(fractionalPartDivisor);
+			//add fractional part to result, by dividing fracPart by (1 * (10 * n)), where n = number of fractional digits
+			result += (fracPart / static_cast<double>(fractionalPartDivisor));
 
 			if (isNegative)
 			{
@@ -349,12 +349,13 @@ namespace CORE_LIB
 
 	int String::toInt(const String& _string)
 	{
+		assert(_string.legth() > 0 && "_string.legth() > 0");
+
 		int32 result = 0;
 
 		if (_string.legth() > 0)
 		{
-			String copy = _string;
-
+			auto copy		= _string;
 			bool isNegative = copy.charAt(0) == _T('-');
 
 			if (isNegative)
@@ -364,14 +365,14 @@ namespace CORE_LIB
 
 			for (size_t i = 0; i < copy.legth(); ++i)
 			{
-				TCHAR ch = copy[i];
+				auto ch = copy[i];
 
 				if (!isCharADigit(ch))
 				{
 					if (!(ch == '.' && i != 0))
 					{
 						result = 0;
-						assert(false && "Error! Convert String to int failed!!!");
+						assert(false && "Incorrect string!!!");
 					}
 
 					break;
@@ -391,9 +392,9 @@ namespace CORE_LIB
 
 	bool String::isEqual(const String& _string1, const String& _string2)
 	{
-		if (_string1.legth() == _string2.legth())
+		if (_string1.legth() == _string2.legth() && _string1.legth() != 0 && _string2.legth() != 0)
 		{
-			for (uint32 i = 0; i < static_cast<uint32>(_string1.legth()); ++i)
+			for (size_t i = 0; i < _string1.legth(); ++i)
 			{
 				if (_string1.charAt(i) != _string2.charAt(i))
 				{
@@ -409,19 +410,17 @@ namespace CORE_LIB
 
 	bool String::isLesser(const String& _string1, const String& _string2)
 	{
-		if((_string1.legth() == 0 && _string2.legth() == 0) || _string2.legth() <= _string1.legth())
+		if (_string1.legth() > _string2.legth() || _string1.legth() == 0 && _string2.legth() == 0)
 		{
 			return false;
 		}
-		
-		if(_string1.legth() < _string2.legth())
+
+		if (_string2.legth() > _string1.legth())
 		{
-			//Left sting is shorter. Return without further comparison.
 			return true;
 		}
-		
-	
-		for (uint32 i = 0; i < static_cast<uint32>(_string1.legth()); ++i)
+
+		for (size_t i = 0; i < _string1.legth(); ++i)
 		{
 			if (_string1.charAt(i) < _string2.charAt(i))
 			{
