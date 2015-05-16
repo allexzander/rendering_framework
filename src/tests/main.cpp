@@ -1,6 +1,7 @@
 #include <iostream>
 #include "..\core\string.h"
 #include "..\core\vector.h"
+#include "..\core\list.h"
 #include <assert.h>
 
 
@@ -122,9 +123,69 @@ bool testVector()
 	assert(testResult && "Error!!! testVector has failed");
 	return testResult;
 }
+bool testList()
+{
+	bool testResult = true;
+
+	TList<int> intList;
+
+	bool sizeAfterConstruction = intList.size() == 0;
+
+	intList.push_back(5);
+	intList.push_back(7);
+	intList.push_back(9);
+	intList.push_back(11);
+
+	bool sizeAfter4ElementsPushed = intList.size() == 4;
+
+	intList.clear();
+
+	bool sizeAfterClear = intList.size() == 0;
+
+	intList.push_back(7);
+	intList.push_back(9);
+
+	bool sizeAfter2ElementsPushed = intList.size() == 2;
+
+	intList.pop_back();
+	intList.pop_back();
+
+	bool sizeAfter2ElementsPopped = intList.size() == 0;
+
+	intList.push_back(25);
+
+	bool sizeAfter1ElementPushed = intList.size() == 1;
+
+	intList.push_back(41);
+
+	TList_iterator<int> insertAfterHead = intList.begin();
+	intList.insert(insertAfterHead, 99);
+	TList_iterator<int> insertAfterTail = intList.end();
+	intList.insert(insertAfterTail, 156);
+
+	TList_iterator<int> itMiddle = intList.iterator();
+
+	for (; itMiddle; ++itMiddle)
+	{
+		if (*itMiddle == 99)
+		{
+			break;
+		}
+	}
+	//!!!ADD MOAAAAR TESTS!!!
+	if (itMiddle)
+	{
+		intList.insert(itMiddle, 666);
+	}
+
+	testResult = sizeAfterConstruction && sizeAfterClear 
+		&& sizeAfter2ElementsPushed && sizeAfter2ElementsPopped && sizeAfter1ElementPushed;
+
+	return testResult;
+}
 int main()
 {
-	if (testString() && testVector())
+	if (testString() && testVector() && testList())
 	{
 		std::cout << "All tests successfully completed."<<std::endl;
 	}
