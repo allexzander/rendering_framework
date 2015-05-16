@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <assert.h>
 #include "commondefs.h"
-#include "string.h"
 
 namespace CORE_LIB
 {
@@ -12,7 +11,7 @@ namespace CORE_LIB
 	template <class T> class TVector_terator;
 
 	//TVector_const_iterator
-	template <class T, class T1 = CORE_LIB::String>
+	template <class T>
 	class TVector_const_iterator
 	{
 		//allow TVector to create TVector_const_iterator instances
@@ -586,7 +585,7 @@ namespace CORE_LIB
 	template <class T>
 	const T& TVector<T>::operator[](uint32 _index) const
 	{
-		return this->[_index];
+		return m_pElements[_index];
 	}
 
 	template <class T>
