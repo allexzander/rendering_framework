@@ -1,10 +1,11 @@
 #include <iostream>
 #include "..\core\string.h"
+#include "..\core\vector.h"
 #include <assert.h>
 
 
 using namespace std;
-using CORE_LIB::String;
+using namespace CORE_LIB;
 
 bool testString()
 {
@@ -67,10 +68,42 @@ bool testString()
 
 	return testResult;
 }
+bool testVector() 
+{
+	bool testResult = false;
 
+	TVector<int> emptyVector;
+
+	TVector<int> nonEmptyVector;
+	nonEmptyVector.push_back(1);
+	nonEmptyVector.push_back(5);
+	nonEmptyVector.push_back(11);
+
+	TVector<String> wordsVector(5);
+
+	wordsVector.push_back(_T("door"));
+	wordsVector.push_back(_T("nose"));
+	wordsVector.push_back(_T("horse"));
+	wordsVector.push_back(_T("big"));
+	wordsVector.push_back(_T("oranje juice"));
+	wordsVector.push_back(_T("small"));
+
+	bool testVectorsHaveCorrectSizeAndCapacity = emptyVector.size() == 0 && nonEmptyVector.size() > 0 
+		&& nonEmptyVector.size() == 3 && wordsVector.size() == 6 && wordsVector.capacity() == 7;
+
+	bool testVectorContainsCorrectElements = wordsVector[0] == _T("door") && wordsVector[1] == _T("nose") 
+		&& wordsVector[2] == _T("horse") && wordsVector[3] == _T("big") && wordsVector[4] == _T("oranje juice");
+
+	
+
+	testResult = testVectorsHaveCorrectSizeAndCapacity && testVectorContainsCorrectElements;
+
+	assert(testResult && "Error!!! testVector has failed");
+	return testResult;
+}
 int main()
 {
-	if (testString())
+	if (testString() && testVector())
 	{
 		std::cout << "All tests successfully completed."<<std::endl;
 	}
