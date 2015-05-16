@@ -1,89 +1,256 @@
 #pragma once
 
-#ifdef __linux__
 #include <stdexcept>
-#endif //__linux__
-
-//Basic singly-linked TList container
-
+#include <assert.h>
 #include "commondefs.h"
 
 namespace CORE_LIB
 {
 	//Forward declarations
 	template <class T> class TList;
-	template <class T> class TList_iterator;
-	template <class T> class TList_const_iterator;
 
-	//TList Node
+	//class Node
 	template <class T>
 	class Node
 	{
-	private:
-		//Node value(data)
-		T m_Data;
-		//Pointer to next node
-		Node* m_pNext;
 	public:
-		Node()
+		//default constructor
+		Node() : Node(T(0), nullptr)
 		{
-			m_pNext = 0;
 		}
-		//Copy constructor
-		Node(const T& _data)
+		//constructor with 1 argument
+		Node(const T& _data) : Node(_data, nullptr)
 		{
-			m_Data = _data;
-			m_pNext = 0;
 		}
-		//Overloaded copy constructor
-		Node(const T& _data, Node<T>* _next)
+		//constructor with 2 arguments
+		Node(const T& _data, Node<T>* _next) : 
+			m_Data(_data), m_pNext(_next)
 		{
-			m_Data = _data;
-			m_pNext = _next;
 		}
-	public:
-		//Set pointer to next node
-		void setNext(Node<T>* _next) { m_pNext = _next; }
-		//Retreive pointer to next node
-		Node<T>* getNext() { return m_pNext; }
-		//Set node data
-		void setData(const T& _data) { m_Data = _data; }
-		//Get node data
-		T& getData() { return m_Data; }
-	};
+		//copy constructor
+		Node(const Node<T>& _source) : Node(_source.getData(), _source.getNext())
+		{
+		}
 
-	//Singly-linked list
+	public:
+		void	 setNext(Node<T>* _next) { m_pNext = _next; }
+		Node<T>* getNext() const { return m_pNext; }
+
+		void	 setData(const T& _data) { m_Data = _data; }
+		T&		 getData() { return m_Data; }
+
+		operator T() const
+		{
+			return m_Data;
+		}
+
+	private:
+		T	  m_Data;
+		Node* m_pNext;
+	}; //class Node
+
+	//TList_iterator
+	template <class T>
+	class TList_iterator
+	{
+		friend class TList<T>;
+
+	public:
+		TList_iterator() : m_pCurrentNode(nullptr)
+		{
+		}
+
+	private:
+		TList_iterator(Node<T>* _node) : m_pCurrentNode(_node)
+		{
+		}
+
+	public:
+		Node<T>* getNode() { return m_pCurrentNode; }
+
+		T& getData() 
+		{
+			assert(m_pCurrentNode && "Error m_pCurrentNode");
+			return m_pCurrentNode->getData(); 
+		}
+
+		TList_iterator& operator=(const TList_iterator& _rhs)
+		{
+			m_pCurrentNode = _rhs.node();
+			return *this;
+		}
+
+		//prefix operator
+		TList_iterator& operator++()
+		{
+			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
+
+			if (m_pCurrentNode->getNext())
+			{
+				m_pCurrentNode = m_pCurrentNode->getNext();
+			}
+			else
+			{
+				throw std::out_of_range("Iterator out of range!");
+			}
+
+			return *this;
+		}
+
+		//postfix operator
+		TList_iterator operator++(int)
+		{
+			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
+
+			Node<T>* tempNode = m_pCurrentNode;
+
+			if (m_pCurrentNode->getNext())
+			{
+				m_pCurrentNode = m_pCurrentNode->getNext();
+			}
+			else
+			{
+				throw std::out_of_range("Iterator out of range!");
+			}
+
+			return tempNode;
+		}
+
+		T& operator*()
+		{
+			return getData();
+		}
+
+		operator bool() const
+		{
+			return m_pCurrentNode && m_pCurrentNode->getNext();
+		}
+
+		friend bool operator==(const TList_iterator& _lhs, const TList_iterator& _rhs)
+		{
+			_lhs.m_pCurrentNode == _rhs.m_pCurrentNode;
+		}
+
+		friend bool operator!=(const TList_iterator& _lhs, const TList_iterator& _rhs)
+		{
+			return _lhs.m_pCurrentNode != _rhs.m_pCurrentNode;
+		}
+
+	private:
+		Node<T>* m_pCurrentNode;
+	}; //class TList_iterator
+
+	//TList_const_iterator
+	template <class T>
+	class TList_const_iterator
+	{
+		friend class TList<T>;
+
+	public:
+		TList_const_iterator() : m_pCurrentNode(nullptr)
+		{
+		}
+
+	private:
+		TList_const_iterator(Node<T>* _node) : m_pCurrentNode(_node)
+		{
+		}
+
+	public:
+		Node<T>* getNode() { return m_pCurrentNode; }
+
+		const T& getData()
+		{
+			assert(m_pCurrentNode && "Error m_pCurrentNode");
+			return m_pCurrentNode->getData();
+		}
+
+		TList_const_iterator& operator=(const TList_const_iterator& _rhs)
+		{
+			m_pCurrentNode = _rhs.node();
+			return *this;
+		}
+
+		//prefix operator
+		TList_const_iterator& operator++()
+		{
+			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
+
+			if (m_pCurrentNode->getNext())
+			{
+				m_pCurrentNode = m_pCurrentNode->getNext();
+			}
+			else
+			{
+				throw std::out_of_range("Iterator out of range!");
+			}
+
+			return *this;
+		}
+
+		//postfix operator
+		TList_const_iterator operator++(int)
+		{
+			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
+
+			Node<T>* tempNode = m_pCurrentNode;
+
+			if (m_pCurrentNode->getNext())
+			{
+				m_pCurrentNode = m_pCurrentNode->getNext();
+			}
+			else
+			{
+				throw std::out_of_range("Iterator out of range!");
+			}
+
+			return tempNode;
+		}
+
+		const T& operator*()
+		{
+			return getData();
+		}
+
+		operator bool() const
+		{
+			return m_pCurrentNode && m_pCurrentNode->getNext();
+		}
+
+		friend bool operator==(const TList_const_iterator& _lhs, const TList_const_iterator& _rhs)
+		{
+			_lhs.m_pCurrentNode == _rhs.m_pCurrentNode;
+		}
+
+		friend bool operator!=(const TList_const_iterator& _lhs, const TList_const_iterator& _rhs)
+		{
+			return _lhs.m_pCurrentNode != _rhs.m_pCurrentNode;
+		}
+
+	private:
+		Node<T>* m_pCurrentNode;
+	}; //class TList_const_iterator
+
+	//TList
 	template <class T>
 	class TList
 	{
-	private:
-		Node<T>* m_pHead;
-		Node<T>* m_pTail;
-		uint32 m_Length;
 	public:
-		TList()
+		//default constructor
+		TList() : m_pHead(nullptr), m_pTail(nullptr), m_Size(0)
 		{
-			m_pHead = 0;
-			m_pTail = 0;
-			m_Length = 0;
 		}
-		TList(const TList<T>& _source)
+		//copy constructor
+		TList(const TList<T>& _source) : TList()
 		{
-			m_pHead = 0;
-			m_pTail = 0;
-			m_Length = 0;
-			//TODO
-			/*for(TList_const_iterator<T> it = _source.begin(); it != _source.end(); it++)
-			{
-			push_back(*it);
-			}*/
+			//!!!TODO!!!
 		}
 		TList & operator=(const TList & _rhs)
 		{
 			clear();
 			m_pHead = 0;
 			m_pTail = 0;
-			m_Length = 0;
+			m_Size  = 0;
 			for(TList_const_iterator<T> it = _rhs.begin(); it != _rhs.end(); it++)
 			{
 				push_back(*it);
@@ -95,7 +262,7 @@ namespace CORE_LIB
 			clear();
 		}
 	public:
-		uint32 length() const{ return m_Length; }
+		size_t size() const { return m_Size; }
 
 		void push_back(const T& _data);
 		void pop_back();
@@ -107,8 +274,11 @@ namespace CORE_LIB
 
 		const T& dataOf(uint32 _i) const;
 
-		const T& back() const;
+		const T& back()  const;
 		const T& front() const;
+
+		TList_iterator<T>		  iterator()	  const;
+		TList_const_iterator<T>	  constIterator() const;
 
 		TList_iterator<T> begin();
 		TList_iterator<T> end();
@@ -117,231 +287,96 @@ namespace CORE_LIB
 		TList_const_iterator<T> end() const;
 
 		TList_iterator<T> find(const T& _key);
-	};
 
-	//TList Iterator
-	template <class T>
-	class TList_iterator
-	{
 	private:
-		//Pointer to current iterable node
-		Node<T>* m_pCurrentNode;
-	public:
-		//Constructor( from list node)
-		TList_iterator(Node<T>* _node)
-		{
-			m_pCurrentNode = _node;
-		}
-	public:
-		//Get node's adress
-		Node<T>* node() { return m_pCurrentNode; }
-		//Get node's data
-		const T& data() { return m_pCurrentNode->m_Data; }
-		//Copy operator=
-		TList_iterator & operator=(TList_iterator & _rhs)
-		{
-			m_pCurrentNode = _rhs.node();
-			return *this;
-		}
-		//Copy operator= fron list's node
-		TList_iterator & operator=(Node<T>* _rhs)
-		{
-			m_pCurrentNode = _rhs;
-			return *this;
-		}
-		//Incriment operators
-		TList_iterator  operator++()
-		{
-			if(m_pCurrentNode->getNext() != 0)
-			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
-			}
-			else
-			{
-				throw std::out_of_range("Iterator out of range!");
-			}
-			return *this;
-		}
-		TList_iterator  operator++(int)
-		{
-			Node<T>* tempNode = m_pCurrentNode;
-			if(m_pCurrentNode->getNext() != 0)
-			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
-			}
-			else
-			{
-				throw std::out_of_range("Iterator out of range!");
-			}
-			return tempNode;
-		}
-
-		//Operator*(returns current node's data)
-		T & operator*()
-		{
-			return m_pCurrentNode->getData();
-		}
-
-		bool operator!=(TList_iterator & _rhs)
-		{
-			return m_pCurrentNode != _rhs.node();
-		}
-
-		bool operator==(TList_iterator & _rhs)
-		{
-			return m_pCurrentNode == _rhs.node();
-		}
+		Node<T>* m_pHead;
+		Node<T>* m_pTail;
+		size_t	 m_Size;
 	};
 
-	//TList Const Iterator
-	template <class T>
-	class TList_const_iterator
-	{
-	private:
-		Node<T>* m_pCurrentNode;
-	public:
-		TList_const_iterator(Node<T>* _node)
-		{
-			m_pCurrentNode = _node;
-		}
-	public:
-		Node<T>* node() { return m_pCurrentNode; }
-		const T& data() { return m_pCurrentNode->m_Data; }
-		const TList_const_iterator & operator=(TList_const_iterator & _rhs)
-		{
-			m_pCurrentNode = _rhs.node();
-			return *this;
-		}
-		const TList_const_iterator & operator=(Node<T>* _rhs)
-		{
-			m_pCurrentNode = _rhs;
-			return *this;
-		}
-		const TList_const_iterator  operator++()
-		{
-			if(m_pCurrentNode->getNext() != 0)
-			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
-			}
-			else
-			{
-				throw std::out_of_range("Iterator out of range!");
-			}
-			return *this;
-		}
-		const TList_const_iterator  operator++(int)
-		{
-			Node<T>* tempNode = m_pCurrentNode;
-			if(m_pCurrentNode->getNext() != 0)
-			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
-			}
-			else
-			{
-				throw std::out_of_range("Iterator out of range!");
-
-			}
-			return tempNode;
-		}
-		const T & operator*()
-		{
-			return m_pCurrentNode->getData();
-		}
-
-		bool operator!=(TList_const_iterator & _rhs)
-		{
-			return m_pCurrentNode != _rhs.node();
-		}
-		bool operator==(TList_const_iterator & _rhs)
-		{
-			return m_pCurrentNode == _rhs.node();
-		}
-	};
-
-	//TList member functions definition
 	template <class T>
 	void TList<T>::push_back(const T& _data)
 	{
-		Node<T> *newNode = new Node<T>(_data);
+		Node<T>* newNode = new Node<T>(_data);
 
-		if(m_pHead != 0)
+		if (m_Size == 0)
 		{
-			Node<T> *lastNode = m_pHead;
-			while(lastNode->getNext() != m_pTail)
-			{
-				lastNode = lastNode->getNext();
-			}
-
-			newNode->setNext(m_pTail);
-			lastNode->setNext(newNode);
+			m_pHead = m_pTail = newNode;
 		}
 		else
 		{
-			m_pHead = newNode;
-			m_pTail = new Node<T>;
-
-			m_pHead->setNext(m_pTail);
+			m_pTail->setNext(newNode);
+			m_pTail	= newNode;
 		}
-		++m_Length;
+
+		++m_Size;
 	}
 
 	template <class T>
 	void TList<T>::pop_back()
 	{
-		if(m_pHead != 0 && m_Length > 0)
-		{
-			Node<T>* currentNode = m_pHead;
-			Node<T>* previousNode = m_pHead;
-			while(currentNode->getNext() != m_pTail)
-			{
-				previousNode = currentNode;
-				currentNode = currentNode->getNext();
-			}
+		assert(m_Size > 0 && "List is empty!!!!");
 
-			if(currentNode == m_pHead)
+		if (m_Size > 0)
+		{
+			if (m_Size == 1)
 			{
-				//Delete last node and clear pointers
-				m_pHead = 0;
-				delete currentNode;
-				currentNode = 0;
+				delete m_pTail;
+				m_pHead = m_pTail = nullptr;
+			}
+			else
+			{
+				Node<T>* preTail = m_pHead;
+
+				while (preTail->getNext() && preTail->getNext() != m_pTail)
+				{
+					preTail = preTail->getNext();
+				}
 
 				delete m_pTail;
-				m_pTail = 0;
-				return;
+				m_pTail = preTail;
+				preTail->setNext(nullptr);
 			}
-			delete currentNode;
-			currentNode = 0;
 
-			previousNode->setNext(m_pTail);
+			--m_Size;
 		}
 	}
 
 	template <class T>
 	void TList<T>::clear()
 	{
-		if(m_Length > 0)
+		if (m_Size > 0)
 		{
-			Node<T>* currentNode = m_pHead;
+			Node<T>* nextNode = m_pHead;
 
-			while(currentNode->getNext() != 0)
+			if (nextNode->getNext())
 			{
-				Node<T>* tempNode = currentNode;
-				currentNode = currentNode->getNext();
-				delete tempNode;
+				while (nextNode->getNext())
+				{
+					Node<T>* currentNode = nextNode;
+					nextNode = nextNode->getNext();
+					delete currentNode;
+				}
+
+				if (nextNode == m_pTail)
+				{
+					delete nextNode;
+				}
 			}
-			if(currentNode == m_pTail)
+			else
 			{
-				delete currentNode;
-				m_pTail = 0;
+				delete nextNode;
 			}
-			m_pHead = 0;
+
+			m_pHead = m_pTail = nullptr;
+			m_Size	= 0;
 		}
 	}
 
 	template <class T>
 	void TList<T>::erase(TList_iterator<T>& _pos)
 	{
-		if(_pos == begin())
+		/*if(_pos == begin())
 		{
 			Node<T>* tempNode = m_pHead->getNext();
 			delete m_pHead;
@@ -360,24 +395,23 @@ namespace CORE_LIB
 			}
 			prevIt = it;
 		}
-		--m_Length;
+		--m_Size;*/
 	}
 
 	template <class T>
 	void TList<T>::insert(TList_iterator<T>& _after, const T& _data)
 	{
-		Node<T>* newNode = new Node<T>(_data, _after.node()->getNext());
+		Node<T>* newNode = new Node<T>(_data, _after.getNode()->getNext());
+		_after.getNode()->setNext(newNode);
 
-		_after.node()->setNext(newNode);
-
-		++m_Length;
+		++m_Size;
 	}
 
 	//Non-effective
 	template <class T>
 	const T& TList<T>::dataOf(uint32 _i) const
 	{
-		if(m_Length > _i && m_pHead != 0)
+		/*if(m_Size > _i && m_pHead != 0)
 		{
 			Node<T> *currentNode = m_pHead;
 			uint32 i = 0;
@@ -391,9 +425,8 @@ namespace CORE_LIB
 		else
 		{
 			throw std::out_of_range("Index out of range!");
-		}
+		}*/
 	}
-	//**
 
 	template <class T>
 	const T& TList<T>::front() const
@@ -404,14 +437,14 @@ namespace CORE_LIB
 	template <class T>
 	const T& TList<T>::back() const
 	{
-		Node<T>* currenNode = m_pHead;
+		/*Node<T>* currenNode = m_pHead;
 		Node<T>* previousNode = m_pHead;
 		while(currenNode->getNext() != m_pTail)
 		{
 			currenNode = currenNode->getNext();
 			previousNode = currenNode;
-		}
-		return previousNode->getData();
+		}*/
+		return m_pTail->getData();
 	}
 
 	template <class T>
@@ -445,13 +478,28 @@ namespace CORE_LIB
 	template <class T>
 	TList_iterator<T> TList<T>::find(const T& _key)
 	{
-		for(TList_iterator<T> it = begin(); it != end(); ++it)
+		/*for(TList_iterator<T> it = begin(); it != end(); ++it)
 		{
 			if(*it == _key)
 			{
 				return it;
 			}
-		}
+		}*/
 		return end();
 	}
-}
+
+	template <class T>
+	TList_iterator<T> TList<T>::iterator() const
+	{
+		TList_iterator<T> it(m_pHead);
+		return it;
+	}
+
+	template <class T>
+	TList_const_iterator<T> TList<T>::constIterator() const
+	{
+		TList_const_iterator<T> it(m_pHead);
+		return it;
+	}
+
+}; //CORE_LIB
