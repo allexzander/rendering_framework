@@ -409,8 +409,11 @@ namespace CORE_LIB
 	template <class T>
 	TVector<T>::TVector(size_t _initialCapacity) : TVector()
 	{
-		m_Capacity	= _initialCapacity;
-		m_pElements = new T[m_Capacity];
+		if (_initialCapacity > 0)
+		{
+			m_Capacity = _initialCapacity;
+			m_pElements = new T[m_Capacity];
+		}
 	}
 
 	template <class T>
