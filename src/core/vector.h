@@ -394,7 +394,30 @@ namespace CORE_LIB
 		void erase(uint32 _pos);
 		void erase(const TVector_iterator<T>& _pos);
 		void clear();
+		friend bool operator==(const TVector& _lhs, const TVector& _rhs)
+		{
+			if (_lhs.m_Size != _rhs.m_Size)
+			{
+				return false;
+			}
+
+			for (size_t i = 0; i < _lhs.size(); ++i)
+			{
+				if (_lhs[i] != _rhs[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		friend bool operator!=(const TVector& _lhs, const TVector& _rhs)
+		{
+			return !_lhs == _rhs;
+		}
 		//CORE_LIB::String glue(CORE_LIB::String& _delimiter);
+
 	}; //TVector declaration
 
 	//TVector definition
@@ -613,7 +636,12 @@ namespace CORE_LIB
 	*/
 	const T& TVector<T>::at(uint32 _index) const
 	{
-		return at(_index);
+		if (_index > (m_Size - 1))
+		{
+			throw std::out_of_range("Index out of range!");
+		}
+
+		return m_pElements[_index];
 	}
 
 	template <class T>
@@ -625,7 +653,7 @@ namespace CORE_LIB
 	{
 		if (m_Size > 0 && _pos < m_Size)
 		{
-			T* tempBuffer = new T[m_Capacity];
+			auto tempBuffer = new T[m_Capacity];
 			uint32 i = 0;
 			uint32 j = 0;
 			while (j < m_Size)
@@ -656,7 +684,7 @@ namespace CORE_LIB
 	{
 		if (_pos >= begin() && _pos < end())
 		{
-			T* tempBuffer = new T[m_Capacity];
+			auto tempBuffer = new T[m_Capacity];
 			int32 i = 0;
 			for (TVector_iterator<T> it = iterator(); it; ++it)
 			{

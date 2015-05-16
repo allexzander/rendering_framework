@@ -33,6 +33,27 @@ bool testString()
 	String wantBeTrimmed = _T("Maybe                 other time?");
 	String iHaveNoSence = _T("                                                     ");
 
+	TVector<String> fruits(0);
+	fruits.push_back(_T("banana"));
+	fruits.push_back(_T("apple"));
+	fruits.push_back(_T("pineapple"));
+	fruits.push_back(_T("pear"));
+	fruits.push_back(_T("orange"));
+	fruits.push_back(_T("lemon"));
+
+	String fruitsString;
+
+	for (TVector_const_iterator<String> it = fruits.constIterator(); it; ++it)
+	{
+		fruitsString += *it;
+		fruitsString += _T(";");
+	}
+
+	fruitsString.erase(fruitsString.legth() - 1, 1);
+
+	TVector<String> splittedString = fruitsString.split(_T(';'));
+
+	bool testStringSplit = splittedString == fruits;
 
 	bool testStringToDouble = (static_cast<double>(doubleString1) == 12456.04242) && (static_cast<double>(doubleString2) == -5535123456.04242) &&
 		(static_cast<double>(doubleString3) == 0.0353532) && static_cast<double>(doubleString4) == -0.0353532;
@@ -61,7 +82,7 @@ bool testString()
 	bool testStartsWith = wantBeTrimmed.startsWith(_T("Maybe")) && smallString.startsWith(String(_T("sm")));
 	bool testEndsWith = wantBeTrimmed.endsWith(_T("time?")) && equal2.endsWith(_T("win!"));
 
-	bool testResult = testConcat && testConcatAndAssign && testErase && testStringToDouble
+	bool testResult = testStringSplit && testConcat && testConcatAndAssign && testErase && testStringToDouble
 		&& testCopyConstructAndAssignment && testLengthIsValid && testAssignmentOperator && testLesserGreaterEqual
 		&& testToConstChar && testClear && testTrim && testConcatSingleChar && testStartsWith && testEndsWith;
 	assert(testResult && "Error!!! testString has failed");

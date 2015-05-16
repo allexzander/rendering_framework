@@ -7,6 +7,7 @@
 typedef char TCHAR;
 #endif
 #include "commondefs.h"
+#include "vector.h"
 
 namespace CORE_LIB
 {
@@ -51,6 +52,8 @@ namespace CORE_LIB
 
 		bool endsWith(const String& _pattern) const;
 
+		CORE_LIB::TVector<String> split(TCHAR _splitter) const;
+
 		operator const TCHAR*() const;
 
 		const TCHAR operator[](uint32 _at) const
@@ -73,7 +76,22 @@ namespace CORE_LIB
 
 		friend bool operator==(const TCHAR* _string, const String& _rhs)
 		{
-			return _rhs == String(_string);
+			return String(_string) == _rhs;
+		}
+
+		friend bool operator!=(const String& _lhs, const String& _rhs)
+		{
+			return !(_lhs == _rhs);
+		}
+
+		friend bool operator!=(const String& _lhs, const TCHAR* _string)
+		{
+			return _lhs != String(_string);
+		}
+
+		friend bool operator!=(const TCHAR* _string, const String& _rhs)
+		{
+			return String(_string) != _rhs;
 		}
 
 		friend bool operator<(const String& _lhs, const String& _rhs)
@@ -141,6 +159,13 @@ namespace CORE_LIB
 		String operator+=(const String& _rhs)
 		{
 			*this = *this + _rhs;
+			return *this;
+		}
+
+		//!!!OPTIMEZE IT LATER!!!
+		String operator+=(TCHAR c)
+		{
+			*this = *this + c;
 			return *this;
 		}
 

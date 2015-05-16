@@ -97,6 +97,10 @@ namespace CORE_LIB
 
 			m_Length	   = len;
 		}
+		else
+		{
+			clear();
+		}
 
 		return *this;
 	}
@@ -211,6 +215,9 @@ namespace CORE_LIB
 		return *this;
 	}
 
+	/*
+		**Clears and deletes m_pBuffer
+	*/
 	void String::clear()
 	{
 		if (m_Length > 0 && m_pBuffer != nullptr)
@@ -255,6 +262,36 @@ namespace CORE_LIB
 		}
 
 		return false;
+	}
+
+	CORE_LIB::TVector<String> String::split(TCHAR _splitter) const
+	{
+		CORE_LIB::TVector<String> result;
+
+		if (m_Length > 0)
+		{
+			String currentWord = _T("");
+
+			size_t index = 0;
+
+			while (index < m_Length)
+			{
+				if (m_pBuffer[index] != _splitter)
+				{
+					currentWord += m_pBuffer[index];
+				}
+				else
+				{
+					result.push_back(currentWord);
+					currentWord = _T("");
+				}
+				++index;
+			}
+
+			result.push_back(currentWord);
+		}
+
+		return result;
 	}
 
 	String::operator const TCHAR*() const
