@@ -8,6 +8,7 @@ namespace CORE_LIB
 {
 	//Forward declarations
 	template <class T> class TList;
+	template <class T> class TList_const_iterator;
 
 	//class Node
 	template <class T>
@@ -34,10 +35,14 @@ namespace CORE_LIB
 
 	public:
 		void	 setNext(Node<T>* _next) { m_pNext = _next; }
-		Node<T>* getNext() const { return m_pNext; }
+
+		Node<T>*	   getNext() { return m_pNext; }
+		const Node<T>* getNext() const { return m_pNext; }
 
 		void	 setData(const T& _data) { m_Data = _data; }
 		T&		 getData() { return m_Data; }
+
+		const T& getData() const { return m_Data; }
 
 		operator T() const
 		{
@@ -74,18 +79,16 @@ namespace CORE_LIB
 			return m_pCurrentNode->getData(); 
 		}
 
-		TList_iterator& operator=(const TList_iterator& _rhs)
+		TList_iterator& operator=(TList_iterator& _rhs)
 		{
-			m_pCurrentNode = _rhs.node();
+			m_pCurrentNode = _rhs.getNode();
 			return *this;
 		}
 
 		//prefix operator
 		TList_iterator& operator++()
 		{
-			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
-
-			if (m_pCurrentNode->getNext())
+			if (m_pCurrentNode)
 			{
 				m_pCurrentNode = m_pCurrentNode->getNext();
 			}
@@ -100,11 +103,9 @@ namespace CORE_LIB
 		//postfix operator
 		TList_iterator operator++(int)
 		{
-			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
+			auto tempNode = m_pCurrentNode;
 
-			Node<T>* tempNode = m_pCurrentNode;
-
-			if (m_pCurrentNode->getNext())
+			if (m_pCurrentNode)
 			{
 				m_pCurrentNode = m_pCurrentNode->getNext();
 			}
@@ -123,7 +124,12 @@ namespace CORE_LIB
 
 		operator bool() const
 		{
-			return m_pCurrentNode && m_pCurrentNode->getNext();
+			return m_pCurrentNode != nullptr;
+		}
+
+		operator TList_const_iterator<T>() const
+		{
+			return TList_const_iterator<T>(m_pCurrentNode);
 		}
 
 		friend bool operator==(const TList_iterator& _lhs, const TList_iterator& _rhs)
@@ -145,6 +151,7 @@ namespace CORE_LIB
 	class TList_const_iterator
 	{
 		friend class TList<T>;
+		friend class TList_iterator<T>;
 
 	public:
 		TList_const_iterator() : m_pCurrentNode(nullptr)
@@ -157,9 +164,9 @@ namespace CORE_LIB
 		}
 
 	public:
-		Node<T>* getNode() { return m_pCurrentNode; }
+		const Node<T>* getNode() const { return m_pCurrentNode; }
 
-		const T& getData()
+		const T& getData() const
 		{
 			assert(m_pCurrentNode && "Error m_pCurrentNode");
 			return m_pCurrentNode->getData();
@@ -174,9 +181,7 @@ namespace CORE_LIB
 		//prefix operator
 		TList_const_iterator& operator++()
 		{
-			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
-
-			if (m_pCurrentNode->getNext())
+			if (m_pCurrentNode)
 			{
 				m_pCurrentNode = m_pCurrentNode->getNext();
 			}
@@ -191,11 +196,9 @@ namespace CORE_LIB
 		//postfix operator
 		TList_const_iterator operator++(int)
 		{
-			assert(m_pCurrentNode->getNext() && "Error m_pCurrentNode->getNext()");
+			auto tempNode = m_pCurrentNode;
 
-			Node<T>* tempNode = m_pCurrentNode;
-
-			if (m_pCurrentNode->getNext())
+			if (m_pCurrentNode)
 			{
 				m_pCurrentNode = m_pCurrentNode->getNext();
 			}
@@ -214,7 +217,7 @@ namespace CORE_LIB
 
 		operator bool() const
 		{
-			return m_pCurrentNode && m_pCurrentNode->getNext();
+			return m_pCurrentNode != nullptr;
 		}
 
 		friend bool operator==(const TList_const_iterator& _lhs, const TList_const_iterator& _rhs)
@@ -243,15 +246,15 @@ namespace CORE_LIB
 		//copy constructor
 		TList(const TList<T>& _source) : TList()
 		{
-			//!!!TODO!!!
+			for (TList_const_iterator<T> it = _source.constIterator(); it; ++it)
+			{
+				push_back(*it);
+			}
 		}
 		TList & operator=(const TList & _rhs)
 		{
 			clear();
-			m_pHead = 0;
-			m_pTail = 0;
-			m_Size  = 0;
-			for(TList_const_iterator<T> it = _rhs.begin(); it != _rhs.end(); it++)
+			for (TList_const_iterator it = _source.constIterator(); it; ++it)
 			{
 				push_back(*it);
 			}
@@ -265,14 +268,18 @@ namespace CORE_LIB
 		size_t size() const { return m_Size; }
 
 		void push_back(const T& _data);
+		void push_front(const T& _data);
 		void pop_back();
+		void pop_front();
 
 		void clear();
 
-		void erase(TList_iterator<T>& _pos);
+		void erase(const TList_const_iterator<T>& _pos);
+		void erase(Node<T>* _pos);
+		void erase(const T& _data);
 		void insert(TList_iterator<T>& _after, const T& _data);
 
-		const T& dataOf(uint32 _i) const;
+		const T& at(uint32 _index) const;
 
 		const T& back()  const;
 		const T& front() const;
@@ -286,7 +293,8 @@ namespace CORE_LIB
 		TList_const_iterator<T> begin() const;
 		TList_const_iterator<T> end() const;
 
-		TList_iterator<T> find(const T& _key);
+		TList_iterator<T>		findFirst(const T& _key);
+		TList_const_iterator<T> findFirst(const T& _key) const;
 
 	private:
 		Node<T>* m_pHead;
@@ -297,7 +305,7 @@ namespace CORE_LIB
 	template <class T>
 	void TList<T>::push_back(const T& _data)
 	{
-		Node<T>* newNode = new Node<T>(_data);
+		auto newNode = new Node<T>(_data);
 
 		if (m_Size == 0)
 		{
@@ -309,6 +317,20 @@ namespace CORE_LIB
 			m_pTail	= newNode;
 		}
 
+		++m_Size;
+	}
+
+	template <class T>
+	void TList<T>::push_front(const T& _data)
+	{
+		auto newNode = new Node<T>(_data);
+
+		newNode->setNext(m_pHead);
+		m_pHead = newNode;
+		if (m_Size == 0)
+		{
+			m_pTail = newNode;
+		}
 		++m_Size;
 	}
 
@@ -326,7 +348,7 @@ namespace CORE_LIB
 			}
 			else
 			{
-				Node<T>* preTail = m_pHead;
+				auto preTail = m_pHead;
 
 				while (preTail->getNext() && preTail->getNext() != m_pTail)
 				{
@@ -343,17 +365,39 @@ namespace CORE_LIB
 	}
 
 	template <class T>
+	void TList<T>::pop_front()
+	{
+		assert(m_Size > 0 && "List is empty!!!!");
+
+		if (m_Size > 0)
+		{
+			if (m_Size == 1)
+			{
+				delete m_pHead;
+				m_pHead = m_pTail = nullptr;
+			}
+			else
+			{
+				auto pfrontNode = m_pHead;
+				m_pHead = m_pHead->getNext();
+				delete pfrontNode;
+			}
+			--m_Size;
+		}
+	}
+
+	template <class T>
 	void TList<T>::clear()
 	{
 		if (m_Size > 0)
 		{
-			Node<T>* nextNode = m_pHead;
+			auto nextNode = m_pHead;
 
 			if (nextNode->getNext())
 			{
 				while (nextNode->getNext())
 				{
-					Node<T>* currentNode = nextNode;
+					auto currentNode = nextNode;
 					nextNode = nextNode->getNext();
 					delete currentNode;
 				}
@@ -374,58 +418,145 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	void TList<T>::erase(TList_iterator<T>& _pos)
+	void TList<T>::erase(const TList_const_iterator<T>& _pos)
 	{
-		/*if(_pos == begin())
+		if (m_Size > 0)
 		{
-			Node<T>* tempNode = m_pHead->getNext();
-			delete m_pHead;
-			m_pHead = 0;
-			m_pHead = tempNode;
-			return;
-		}
-		TList_iterator<T> prevIt = begin();
-		for(TList_iterator<T> it = begin(); it != end(); ++it)
-		{
-			if(*it == *_pos)
+			if (_pos.getNode() == m_pHead)
 			{
-				prevIt.m_pCurrentNode->setNext(it.m_pCurrentNode->getNext());
-				delete it.m_pCurrentNode;
-				break;
+				pop_front();
+				return;
 			}
-			prevIt = it;
+			else if (_pos.getNode() == m_pTail)
+			{
+				pop_back();
+				return;
+			}
+			else
+			{
+				auto currentNode = m_pHead;
+
+				while (currentNode && currentNode->getNext() != _pos.getNode())
+				{
+					currentNode = currentNode->getNext();
+				}
+
+				if (currentNode != nullptr)
+				{
+					auto nodeToDelete = currentNode->getNext();
+
+					if (nodeToDelete)
+					{
+						currentNode->setNext(nodeToDelete->getNext());
+						delete nodeToDelete;
+						--m_Size;
+
+						return;
+					}
+				}
+			}
+
+			assert(false && "Incorrect argument was specified!!!");
 		}
-		--m_Size;*/
+		else
+		{
+			throw std::out_of_range("Index out of range!");
+		}
+	}
+
+	template <class T>
+	void TList<T>::erase(Node<T>* _pos)
+	{
+		TList_const_iterator<T> iter(_pos);
+		erase(iter);
+	}
+
+	template <class T>
+	void TList<T>::erase(const T& _data)
+	{
+		if (m_Size > 0)
+		{
+			if (m_Size > 1)
+			{
+				if (m_pHead->getData() == _data)
+				{
+					pop_front();
+					return;
+				}
+				else if (m_pTail->getData() == _data)
+				{
+					pop_back();
+					return;
+				}
+
+				auto currentNode = m_pHead;
+
+				while (currentNode && currentNode->getNext() && currentNode->getNext()->getData() != _data)
+				{
+					currentNode = currentNode->getNext();
+				}
+
+				if (currentNode != nullptr)
+				{
+					auto nodeToDelete = currentNode->getNext();
+					currentNode->setNext(nodeToDelete->getNext());
+					delete nodeToDelete;
+					return;
+				}
+				
+			}
+			else
+			{
+				if (m_pHead->getData() == _data)
+				{
+					clear();
+					return;
+				}
+			}
+
+			throw std::invalid_argument("Index out of range!");
+		}
+		else
+		{
+			throw std::out_of_range("Index out of range!");
+		}
 	}
 
 	template <class T>
 	void TList<T>::insert(TList_iterator<T>& _after, const T& _data)
 	{
-		Node<T>* newNode = new Node<T>(_data, _after.getNode()->getNext());
+		auto newNode = new Node<T>(_data, _after.getNode()->getNext());
 		_after.getNode()->setNext(newNode);
 
 		++m_Size;
 	}
 
-	//Non-effective
 	template <class T>
-	const T& TList<T>::dataOf(uint32 _i) const
+	/*
+		**Linear complicity traversal, by given index
+		@_index = index of node
+	*/
+	const T& TList<T>::at(uint32 _index) const
 	{
-		/*if(m_Size > _i && m_pHead != 0)
+		if (m_Size > 0 && _index < m_Size)
 		{
-			Node<T> *currentNode = m_pHead;
+			auto currentNode = m_pHead;
 			uint32 i = 0;
-			while(i < _i && currentNode->getNext() != 0)
+			for (uint32 i = 0; i < _index; ++i)
 			{
+				if (!currentNode->getNext())
+				{
+					break;
+				}
+
 				currentNode = currentNode->getNext();
-				++i;
 			}
 			return currentNode->getData();
 		}
 		else
 		{
 			throw std::out_of_range("Index out of range!");
-		}*/
+		}
 	}
 
 	template <class T>
@@ -437,13 +568,6 @@ namespace CORE_LIB
 	template <class T>
 	const T& TList<T>::back() const
 	{
-		/*Node<T>* currenNode = m_pHead;
-		Node<T>* previousNode = m_pHead;
-		while(currenNode->getNext() != m_pTail)
-		{
-			currenNode = currenNode->getNext();
-			previousNode = currenNode;
-		}*/
 		return m_pTail->getData();
 	}
 
@@ -476,16 +600,26 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TList_iterator<T> TList<T>::find(const T& _key)
+	TList_iterator<T> TList<T>::findFirst(const T& _key)
 	{
-		/*for(TList_iterator<T> it = begin(); it != end(); ++it)
+		TList_iterator<T> it = iterator();
+
+		for (; it; ++it)
 		{
 			if(*it == _key)
 			{
-				return it;
+				break;
 			}
-		}*/
-		return end();
+		}
+
+		return it;
+	}
+
+	template <class T>
+	TList_const_iterator<T> TList<T>::findFirst(const T& _key) const
+	{
+		TList_iterator<T> it = findFirst(_key);
+		return it;
 	}
 
 	template <class T>
