@@ -16,7 +16,7 @@ namespace CORE_LIB
 	{
 	public:
 		//default constructor
-		Node() : Node(T(0), nullptr)
+		Node() : m_pNext(nullptr)
 		{
 		}
 		//constructor with 1 argument
@@ -29,25 +29,20 @@ namespace CORE_LIB
 		{
 		}
 		//copy constructor
-		Node(const Node<T>& _source) : Node(_source.getData(), _source.getNext())
+		Node(const Node<T>& _source) :
+			Node(_source.getData(), _source.getNext())
 		{
 		}
 
 	public:
-		void	 setNext(Node<T>* _next) { m_pNext = _next; }
+		void setNext(Node<T>* _next) { m_pNext = _next; }
+		void setData(const T& _data) { m_Data  = _data; }
 
-		Node<T>*	   getNext() { return m_pNext; }
+		Node<T>*	   getNext()	   { return m_pNext; }
 		const Node<T>* getNext() const { return m_pNext; }
 
-		void	 setData(const T& _data) { m_Data = _data; }
-		T&		 getData() { return m_Data; }
-
+		T&		 getData()		 { return m_Data; }
 		const T& getData() const { return m_Data; }
-
-		operator T() const
-		{
-			return m_Data;
-		}
 
 	private:
 		T	  m_Data;
@@ -65,21 +60,26 @@ namespace CORE_LIB
 		{
 		}
 
+		TList_iterator(const TList_iterator& _copy) : TList_iterator()
+		{
+			*this = _copy;
+		}
+
 	private:
-		TList_iterator(Node<T>* _node) : m_pCurrentNode(_node)
+		TList_iterator(Node<T>* const _node) : m_pCurrentNode(_node)
 		{
 		}
 
 	public:
-		Node<T>* getNode() { return m_pCurrentNode; }
+		Node<T>* getNode() const { return m_pCurrentNode; }
 
-		T& getData() 
+		T& getData() const
 		{
 			assert(m_pCurrentNode && "Error m_pCurrentNode");
 			return m_pCurrentNode->getData(); 
 		}
 
-		TList_iterator& operator=(TList_iterator& _rhs)
+		const TList_iterator& operator=(const TList_iterator& _rhs)
 		{
 			m_pCurrentNode = _rhs.getNode();
 			return *this;
@@ -117,7 +117,7 @@ namespace CORE_LIB
 			return tempNode;
 		}
 
-		T& operator*()
+		T& operator*() const
 		{
 			return getData();
 		}
@@ -158,13 +158,18 @@ namespace CORE_LIB
 		{
 		}
 
+		TList_const_iterator(const TList_const_iterator& _copy) : TList_const_iterator()
+		{
+			*this = _copy;
+		}
+
 	private:
-		TList_const_iterator(Node<T>* _node) : m_pCurrentNode(_node)
+		TList_const_iterator(Node<T>* const _node) : m_pCurrentNode(_node)
 		{
 		}
 
 	public:
-		const Node<T>* getNode() const { return m_pCurrentNode; }
+		Node<T>* const getNode() const { return m_pCurrentNode; }
 
 		const T& getData() const
 		{
@@ -172,9 +177,9 @@ namespace CORE_LIB
 			return m_pCurrentNode->getData();
 		}
 
-		TList_const_iterator& operator=(const TList_const_iterator& _rhs)
+		const TList_const_iterator& operator=(const TList_const_iterator& _rhs)
 		{
-			m_pCurrentNode = _rhs.node();
+			m_pCurrentNode = _rhs.getNode();
 			return *this;
 		}
 
@@ -210,7 +215,7 @@ namespace CORE_LIB
 			return tempNode;
 		}
 
-		const T& operator*()
+		const T& operator*() const
 		{
 			return getData();
 		}
@@ -246,15 +251,12 @@ namespace CORE_LIB
 		//copy constructor
 		TList(const TList<T>& _source) : TList()
 		{
-			for (TList_const_iterator<T> it = _source.constIterator(); it; ++it)
-			{
-				push_back(*it);
-			}
+			*this = _source;
 		}
-		TList & operator=(const TList & _rhs)
+		const TList& operator=(const TList & _rhs)
 		{
 			clear();
-			for (TList_const_iterator it = _source.constIterator(); it; ++it)
+			for (TList_const_iterator<T> it = _rhs.constIterator(); it; ++it)
 			{
 				push_back(*it);
 			}
@@ -275,7 +277,7 @@ namespace CORE_LIB
 		void clear();
 
 		void erase(const TList_const_iterator<T>& _pos);
-		void erase(Node<T>* _pos);
+		void erase(Node<T>* const _pos);
 		void erase(const T& _data);
 		void insert(TList_iterator<T>& _after, const T& _data);
 
@@ -325,12 +327,16 @@ namespace CORE_LIB
 	{
 		auto newNode = new Node<T>(_data);
 
-		newNode->setNext(m_pHead);
-		m_pHead = newNode;
 		if (m_Size == 0)
 		{
-			m_pTail = newNode;
+			m_pHead = m_pTail = newNode;
 		}
+		else
+		{
+			newNode->setNext(m_pHead);
+			m_pHead = newNode;
+		}
+
 		++m_Size;
 	}
 
@@ -378,9 +384,9 @@ namespace CORE_LIB
 			}
 			else
 			{
-				auto pfrontNode = m_pHead;
+				auto head = m_pHead;
 				m_pHead = m_pHead->getNext();
-				delete pfrontNode;
+				delete head;
 			}
 			--m_Size;
 		}
@@ -391,29 +397,27 @@ namespace CORE_LIB
 	{
 		if (m_Size > 0)
 		{
-			auto nextNode = m_pHead;
-
-			if (nextNode->getNext())
+			if (m_Size > 1)
 			{
-				while (nextNode->getNext())
+				auto nextNode = m_pHead;
+
+				while (nextNode != nullptr)
 				{
 					auto currentNode = nextNode;
 					nextNode = nextNode->getNext();
 					delete currentNode;
 				}
-
-				if (nextNode == m_pTail)
-				{
-					delete nextNode;
-				}
 			}
 			else
 			{
-				delete nextNode;
+				if (m_pHead != nullptr)
+				{
+					delete m_pHead;
+				}
 			}
 
 			m_pHead = m_pTail = nullptr;
-			m_Size	= 0;
+			m_Size = 0;
 		}
 	}
 
@@ -434,23 +438,22 @@ namespace CORE_LIB
 			}
 			else
 			{
-				auto currentNode = m_pHead;
+				auto preNodeToDelete = m_pHead;
 
-				while (currentNode && currentNode->getNext() != _pos.getNode())
+				while (preNodeToDelete && preNodeToDelete->getNext() != _pos.getNode())
 				{
-					currentNode = currentNode->getNext();
+					preNodeToDelete = preNodeToDelete->getNext();
 				}
 
-				if (currentNode != nullptr)
+				if (preNodeToDelete != nullptr)
 				{
-					auto nodeToDelete = currentNode->getNext();
+					auto nodeToDelete = preNodeToDelete->getNext();
 
 					if (nodeToDelete)
 					{
-						currentNode->setNext(nodeToDelete->getNext());
+						preNodeToDelete->setNext(nodeToDelete->getNext());
 						delete nodeToDelete;
 						--m_Size;
-
 						return;
 					}
 				}
@@ -465,7 +468,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	void TList<T>::erase(Node<T>* _pos)
+	void TList<T>::erase(Node<T>* const _pos)
 	{
 		TList_const_iterator<T> iter(_pos);
 		erase(iter);
@@ -525,10 +528,11 @@ namespace CORE_LIB
 	template <class T>
 	void TList<T>::insert(TList_iterator<T>& _after, const T& _data)
 	{
-		auto newNode = new Node<T>(_data, _after.getNode()->getNext());
+		/*auto newNode = new Node<T>(_data, _after.getNode()->getNext());
 		_after.getNode()->setNext(newNode);
 
-		++m_Size;
+		++m_Size;*/
+		assert(false && "!!!Implement me!!!");
 	}
 
 	template <class T>
