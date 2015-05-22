@@ -2,6 +2,7 @@
 #include "..\core\string.h"
 #include "..\core\vector.h"
 #include "..\core\list.h"
+#include "..\core\map.h"
 #include <assert.h>
 
 
@@ -178,14 +179,39 @@ bool testList()
 		intList.insert(itMiddle, 666);
 	}
 
+	TList<String> listStrings;
+	listStrings.push_front(_T(" world!"));
+	listStrings.push_front(_T(" my brave new"));
+	listStrings.push_front(_T("Hello"));
+
+	TList<String> copyListStrings(listStrings);
+	TList<String> copyAssignedListStrings = copyListStrings;
+
+	TList_iterator<String> foundIt = listStrings.findFirst(_T(" my brave new"));
+	TList_iterator<String> copyIt = foundIt;
+	//listStrings.erase(foundIt.getNode());
+	listStrings.erase(_T(" world!"));
 	testResult = sizeAfterConstruction && sizeAfterClear 
 		&& sizeAfter2ElementsPushed && sizeAfter2ElementsPopped && sizeAfter1ElementPushed;
 
 	return testResult;
 }
+bool testMap()
+{
+	Map<int, String> intMap;
+	intMap.insert(String(_T("Fifty Three")), 53);
+	intMap.insert(String(_T("Sixty One")), 61);
+	intMap.insert(String(_T("Forty Nine")), 49);
+	intMap.insert(String(_T("Elleven")), 11);
+	intMap.insert(String(_T("Ninety Nine")), 99);
+	intMap.insert(String(_T("Thirty Three")), 33);
+	intMap.insert(String(_T("Twenty One")), 21);
+
+	return true;
+}
 int main()
 {
-	if (testString() && testVector() && testList())
+	if (testString() && testVector() && testList() && testMap())
 	{
 		std::cout << "All tests successfully completed."<<std::endl;
 	}
