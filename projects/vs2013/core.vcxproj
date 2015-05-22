@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\core\commondefs.h" />
     <ClInclude Include="..\..\src\core\list.h" />
+    <ClInclude Include="..\..\src\core\map.h" />
     <ClInclude Include="..\..\src\core\string.h" />
     <ClInclude Include="..\..\src\core\vector.h" />
   </ItemGroup>
