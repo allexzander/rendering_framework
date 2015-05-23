@@ -24,8 +24,8 @@ namespace CORE_LIB
 		{
 		}
 		//constructor with 2 arguments
-		Node(const T& _data, Node<T>* _next) : 
-			m_Data(_data), m_pNext(_next)
+		Node(const T& _data, Node<T>* _pNext) : 
+			m_Data(_data), m_pNext(_pNext)
 		{
 		}
 		//copy constructor
@@ -35,7 +35,7 @@ namespace CORE_LIB
 		}
 
 	public:
-		void setNext(Node<T>* _next) { m_pNext = _next; }
+		void setNext(Node<T>* _pNext) { m_pNext = _pNext; }
 		void setData(const T& _data) { m_Data  = _data; }
 
 		Node<T>*	   getNext()	   { return m_pNext; }
@@ -66,7 +66,7 @@ namespace CORE_LIB
 		}
 
 	private:
-		TList_iterator(Node<T>* const _node) : m_pCurrentNode(_node)
+		TList_iterator(Node<T>* const _pNode) : m_pCurrentNode(_pNode)
 		{
 		}
 
@@ -164,7 +164,7 @@ namespace CORE_LIB
 		}
 
 	private:
-		TList_const_iterator(Node<T>* const _node) : m_pCurrentNode(_node)
+		TList_const_iterator(Node<T>* const _pNode) : m_pCurrentNode(_pNode)
 		{
 		}
 
@@ -277,7 +277,7 @@ namespace CORE_LIB
 		void clear();
 
 		void erase(const TList_const_iterator<T>& _pos);
-		void erase(Node<T>* const _pos);
+		void erase(Node<T>* const _pPos);
 		void erase(const T& _data);
 		void insert(TList_iterator<T>& _after, const T& _data);
 
@@ -328,16 +328,16 @@ namespace CORE_LIB
 	template <class T>
 	void TList<T>::push_front(const T& _data)
 	{
-		auto newNode = new Node<T>(_data);
+		auto pNewNode = new Node<T>(_data);
 
 		if (m_Size == 0)
 		{
-			m_pHead = m_pTail = newNode;
+			m_pHead = m_pTail = pNewNode;
 		}
 		else
 		{
-			newNode->setNext(m_pHead);
-			m_pHead = newNode;
+			pNewNode->setNext(m_pHead);
+			m_pHead = pNewNode;
 		}
 
 		++m_Size;
@@ -357,16 +357,16 @@ namespace CORE_LIB
 			}
 			else
 			{
-				auto preTail = m_pHead;
+				auto pPreTail = m_pHead;
 
-				while (preTail->getNext() && preTail->getNext() != m_pTail)
+				while (pPreTail->getNext() && pPreTail->getNext() != m_pTail)
 				{
-					preTail = preTail->getNext();
+					pPreTail = pPreTail->getNext();
 				}
 
 				delete m_pTail;
-				m_pTail = preTail;
-				preTail->setNext(nullptr);
+				m_pTail = pPreTail;
+				pPreTail->setNext(nullptr);
 			}
 
 			--m_Size;
@@ -387,9 +387,9 @@ namespace CORE_LIB
 			}
 			else
 			{
-				auto head = m_pHead;
+				auto pHead = m_pHead;
 				m_pHead = m_pHead->getNext();
-				delete head;
+				delete pHead;
 			}
 			--m_Size;
 		}
@@ -402,12 +402,12 @@ namespace CORE_LIB
 		{
 			if (m_Size > 1)
 			{
-				auto nextNode = m_pHead;
+				auto pNextNode = m_pHead;
 
-				while (nextNode != nullptr)
+				while (pNextNode != nullptr)
 				{
-					auto currentNode = nextNode;
-					nextNode = nextNode->getNext();
+					auto currentNode = pNextNode;
+					pNextNode = pNextNode->getNext();
 					delete currentNode;
 				}
 			}
@@ -441,21 +441,21 @@ namespace CORE_LIB
 			}
 			else
 			{
-				auto preNodeToDelete = m_pHead;
+				auto pPreNodeToDelete = m_pHead;
 
-				while (preNodeToDelete && preNodeToDelete->getNext() != _pos.getNode())
+				while (pPreNodeToDelete && pPreNodeToDelete->getNext() != _pos.getNode())
 				{
-					preNodeToDelete = preNodeToDelete->getNext();
+					pPreNodeToDelete = pPreNodeToDelete->getNext();
 				}
 
-				if (preNodeToDelete != nullptr)
+				if (pPreNodeToDelete != nullptr)
 				{
-					auto nodeToDelete = preNodeToDelete->getNext();
+					auto pNodeToDelete = pPreNodeToDelete->getNext();
 
 					if (nodeToDelete)
 					{
-						preNodeToDelete->setNext(nodeToDelete->getNext());
-						delete nodeToDelete;
+						pPreNodeToDelete->setNext(pNodeToDelete->getNext());
+						delete pNodeToDelete;
 						--m_Size;
 						return;
 					}
@@ -471,9 +471,9 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	void TList<T>::erase(Node<T>* const _pos)
+	void TList<T>::erase(Node<T>* const _pPos)
 	{
-		TList_const_iterator<T> iter(_pos);
+		TList_const_iterator<T> iter(_pPos);
 		erase(iter);
 	}
 
@@ -495,18 +495,18 @@ namespace CORE_LIB
 					return;
 				}
 
-				auto currentNode = m_pHead;
+				auto pCurrentNode = m_pHead;
 
-				while (currentNode && currentNode->getNext() && currentNode->getNext()->getData() != _data)
+				while (pCurrentNode && pCurrentNode->getNext() && pCurrentNode->getNext()->getData() != _data)
 				{
-					currentNode = currentNode->getNext();
+					pCurrentNode = pCurrentNode->getNext();
 				}
 
-				if (currentNode != nullptr)
+				if (pCurrentNode != nullptr)
 				{
-					auto nodeToDelete = currentNode->getNext();
-					currentNode->setNext(nodeToDelete->getNext());
-					delete nodeToDelete;
+					auto pNodeToDelete = pCurrentNode->getNext();
+					pCurrentNode->setNext(pNodeToDelete->getNext());
+					delete pNodeToDelete;
 					return;
 				}
 				
@@ -533,8 +533,8 @@ namespace CORE_LIB
 	{
 		if (findIter(_after))
 		{
-			auto newNode = new Node<T>(_data, _after.getNode()->getNext());
-			_after.getNode()->setNext(newNode);
+			auto pNewNode = new Node<T>(_data, _after.getNode()->getNext());
+			_after.getNode()->setNext(pNewNode);
 
 			++m_Size;
 		}
@@ -553,18 +553,18 @@ namespace CORE_LIB
 	{
 		if (m_Size > 0 && _index < m_Size)
 		{
-			auto currentNode = m_pHead;
+			auto pCurrentNode = m_pHead;
 			uint32 i = 0;
 			for (uint32 i = 0; i < _index; ++i)
 			{
-				if (!currentNode->getNext())
+				if (!pCurrentNode->getNext())
 				{
 					break;
 				}
 
-				currentNode = currentNode->getNext();
+				pCurrentNode = pCurrentNode->getNext();
 			}
-			return currentNode->getData();
+			return pCurrentNode->getData();
 		}
 		else
 		{
