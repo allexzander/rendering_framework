@@ -227,7 +227,7 @@ namespace CORE_LIB
 
 		friend bool operator==(const TList_const_iterator& _lhs, const TList_const_iterator& _rhs)
 		{
-			_lhs.m_pCurrentNode == _rhs.m_pCurrentNode;
+			return _lhs.m_pCurrentNode == _rhs.m_pCurrentNode;
 		}
 
 		friend bool operator!=(const TList_const_iterator& _lhs, const TList_const_iterator& _rhs)
@@ -297,6 +297,9 @@ namespace CORE_LIB
 
 		TList_iterator<T>		findFirst(const T& _key);
 		TList_const_iterator<T> findFirst(const T& _key) const;
+
+		TList_iterator<T> findIter(const TList_const_iterator<T>& _it);
+		TList_const_iterator<T> findIter(const TList_const_iterator<T>& _it) const;
 
 	private:
 		Node<T>* m_pHead;
@@ -528,11 +531,17 @@ namespace CORE_LIB
 	template <class T>
 	void TList<T>::insert(TList_iterator<T>& _after, const T& _data)
 	{
-		/*auto newNode = new Node<T>(_data, _after.getNode()->getNext());
-		_after.getNode()->setNext(newNode);
+		if (findIter(_after))
+		{
+			auto newNode = new Node<T>(_data, _after.getNode()->getNext());
+			_after.getNode()->setNext(newNode);
 
-		++m_Size;*/
-		assert(false && "!!!Implement me!!!");
+			++m_Size;
+		}
+		else
+		{
+			throw std::invalid_argument("Invalid insertion position argument!");
+		}
 	}
 
 	template <class T>
@@ -638,6 +647,29 @@ namespace CORE_LIB
 	{
 		TList_const_iterator<T> it(m_pHead);
 		return it;
+	}
+
+	template <class T>
+	TList_iterator<T> TList<T>::findIter(const TList_const_iterator<T>& _it)
+	{
+		TList_iterator<T> foundIt;
+
+		for (TList_iterator<T> it = iterator(); it; ++it)
+		{
+			if (it == _it)
+			{
+				foundIt = it;
+				break;
+			}
+		}
+
+		return foundIt;
+	}
+
+	template <class T>
+	TList_const_iterator<T> TList<T>::findIter(const TList_const_iterator<T>& _it) const
+	{
+		TList_const_iterator<T> foundIt = findIter(it);
 	}
 
 }; //CORE_LIB
