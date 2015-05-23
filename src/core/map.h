@@ -124,6 +124,20 @@ namespace CORE_LIB
 			MapNode<T,U>* pNewNode = new MapNode<T,U>(_data, _key);
 			insert(m_pRoot, pNewNode);
 		}
+		bool find(const U& _inKey, MapNode<T,U>* _currentNode, T& _outFoundData)
+		{
+			/*if (_inKey == _currentNode)
+			if (_inKey < _currentNode->getData())
+			{
+				return find(_inKey, _currentNode->getLeftChild(), _outFoundData);
+			}
+			else
+			{
+				return find(_inKey, _currentNode->getRightChild(), _outFoundData);
+			}*/
+			assert("Implement me!!!!");
+			return false;
+		}
 	private:
 		MapNode<T,U>* m_pRoot;
 		size_t m_Size;
