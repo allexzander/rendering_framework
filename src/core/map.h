@@ -85,64 +85,111 @@ namespace CORE_LIB
 		/*TODO--/
 		constructors
 		/-----*/
+
 	public:
-		void insert(MapNode<TKey,TData>* _parent, MapNode<TKey,TData>* _pNewNode)
-		{
-			if (m_Size == 0)
-			{
-				m_pRoot = _pNewNode;
-				++m_Size;
-			}
-			else
-			{
-				if (_pNewNode->getData() < _parent->getData())
-				{
-					if (!_parent->getLeftChild())
-					{
-						_parent->setLeftChild(_pNewNode);
-						++m_Size;
-					}
-					else
-					{
-						insert(_parent->getLeftChild(), _pNewNode);
-					}
-				}
-				else
-				{
-					if (!_parent->getRightChild())
-					{
-						_parent->setRightChild(_pNewNode);
-						++m_Size;
-					}
-					else
-					{
-						insert(_parent->getRightChild(), _pNewNode);
-					}
-				}
-			}
-		}
+		/**insert new Node
+			@_pParent  = _parent of new inserted Node
+			@_pNewNode = Node to insert
+		*/
+		void insert(MapNode<TKey, TData>* _pParent, MapNode<TKey, TData>* _pNewNode);
+		
+		/**create and insert new Node, given it's key and data
+			@_key  = new Node key
+			@_data = new Node data
+		*/
 		void insert(const TKey& _key, const TData& _data)
 		{
 			MapNode<TKey, TData>* pNewNode = new MapNode<TKey, TData>(_key, _data);
 			insert(m_pRoot, pNewNode);
 		}
-		bool find(const TKey& _inKey, MapNode<TKey, TData>* _currentNode, TData& _outFoundData)
-		{
-			/*if (_inKey == _currentNode)
-			if (_inKey < _currentNode->getData())
-			{
-				return find(_inKey, _currentNode->getLeftChild(), _outFoundData);
-			}
-			else
-			{
-				return find(_inKey, _currentNode->getRightChild(), _outFoundData);
-			}*/
-			assert("Implement me!!!!");
-			return false;
-		}
+
+		/*
+		**returns const Node*, if found in a tree
+		nullptr, otherwise
+		*/
+		const MapNode<TKey, TData>* find(const TKey& _key, MapNode<TKey, TData>* _currentNode = nullptr) const;
+
 	private:
 		MapNode<TKey,TData>* m_pRoot;
 		size_t				 m_Size;
 	};
+
+	//class Map methods definition
+	template <class TKey, class TData>
+	void Map<TKey, TData>::insert(MapNode<TKey, TData>* _pParent, MapNode<TKey, TData>* _pNewNode)
+	{
+		if (m_Size == 0)
+		{
+			m_pRoot = _pNewNode;
+			++m_Size;
+		}
+		else
+		{
+			if (_pNewNode->getKey() == _pParent->getKey())
+			{
+				return;
+			}
+
+			if (_pNewNode->getKey() < _pParent->getKey())
+			{
+				if (!_pParent->getLeftChild())
+				{
+					_pParent->setLeftChild(_pNewNode);
+					++m_Size;
+				}
+				else
+				{
+					insert(_pParent->getLeftChild(), _pNewNode);
+				}
+			}
+			else
+			{
+				if (!_pParent->getRightChild())
+				{
+					_pParent->setRightChild(_pNewNode);
+					++m_Size;
+				}
+				else
+				{
+					insert(_pParent->getRightChild(), _pNewNode);
+				}
+			}
+		}
+	}
+
+	template <class TKey, class TData>
+	const MapNode<TKey, TData>* Map<TKey,TData>::find(const TKey& _key, MapNode<TKey, TData>* _currentNode = nullptr) const
+	{
+		if (m_Size > 0)
+		{
+			if (_currentNode == nullptr)
+			{
+				_currentNode = m_pRoot;
+			}
+
+			if (_currentNode->getKey() == _key)
+			{
+				return _currentNode;
+			}
+
+			if (_key < _currentNode->getKey())
+			{
+				//search in left subtree
+				if (_currentNode->getLeftChild() != nullptr)
+				{
+					return find(_key, _currentNode->getLeftChild());
+				}
+			}
+			else
+			{
+				//search in right subtree
+				if (_currentNode->getRightChild() != nullptr)
+				{
+					return find(_key, _currentNode->getRightChild());
+				}
+			}
+		}
+		return nullptr;
+	}
 
 }; //CORE_LIB
