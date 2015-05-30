@@ -198,7 +198,7 @@ bool testList()
 }
 bool testMap()
 {
-	Map<int, String> intMap;
+	Map<String,int> intMap;
 	intMap.insert(String(_T("Fifty Three")), 53);
 	intMap.insert(String(_T("Sixty One")), 61);
 	intMap.insert(String(_T("Forty Nine")), 49);

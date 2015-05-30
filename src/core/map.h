@@ -7,7 +7,7 @@
 namespace CORE_LIB
 {
 	//MapNode
-	template <class T, class U>
+	template <class TKey, class TData>
 	class MapNode
 	{
 	public:
@@ -16,63 +16,65 @@ namespace CORE_LIB
 		{
 		}
 		//constructor with 2 arguments
-		MapNode(const T& _data, const U& _key) : MapNode()
+		MapNode(const TKey& _key, const TData& _data) : MapNode()
 		{
 			m_Data = _data;
 			m_Key = _key;
 		}
 		//constructor with 4 arguments
-		MapNode(MapNode<T, U>* _left, MapNode<T, U>* _right, const T& _data, const U& _key) : m_pLeft(_left),
-			m_pRight(_right), m_Data(_data), m_Key(_key)
+		MapNode(const TKey& _key, const TData& _data, MapNode<TKey, TData>* _left, MapNode<TKey, TData>* _right) : 
+			m_Key(_key), m_Data(_data),
+			m_pLeft(_left), m_pRight(_right)
 		{
 		}
 		//copy constructor
-		MapNode(const MapNode<T,U>& _copy) : m_pLeft(_copy.getLeftChild()),
-			m_pRight(_copy.getRightChild()), m_Data(_copy.getData())
+		MapNode(const MapNode<TKey, TData>& _copy) : 
+			m_Key(_copy.getKey), m_Data(_copy.getData()),
+			m_pLeft(_copy.getLeftChild()), m_pRight(_copy.getRightChild())
 		{
 		}
 	public:
-		MapNode<T,U>* getLeftChild()
+		MapNode<TKey,TData>* getLeftChild()
 		{
 			return m_pLeft;
 		}
-		MapNode<T,U>* getRightChild()
+		MapNode<TKey,TData>* getRightChild()
 		{
 			return m_pRight;
 		}
-		void setLeftChild(MapNode<T,U>* _pLeft)
+		void setLeftChild(MapNode<TKey,TData>* _pLeft)
 		{
 			m_pLeft = _pLeft;
 		}
-		void setRightChild(MapNode<T,U>* _pRight)
+		void setRightChild(MapNode<TKey,TData>* _pRight)
 		{
 			m_pRight = _pRight;
 		}
-		const T& getData() const
+		const TData& getData() const
 		{
 			return m_Data;
 		}
-		void setData(const T& _data)
+		void setData(const TData& _data)
 		{
 			m_Data = _data;
 		}
-		const U& getKey() const
+		const TKey& getKey() const
 		{
 			return m_Key;
 		}
-		void setKey(const T& _key)
+		void setKey(const TKey& _key)
 		{
 			m_Key = _key;
 		}
 	private:
-		T m_Data;
-		U m_Key;
+		TData m_Data;
+		TKey m_Key;
 		MapNode* m_pLeft;
 		MapNode* m_pRight;
 	};
 
 	//Map
-	template <class T, class U>
+	template <class TKey, class TData>
 	class Map
 	{
 	public:
@@ -84,7 +86,7 @@ namespace CORE_LIB
 		constructors
 		/-----*/
 	public:
-		void insert(MapNode<T,U>* _parent, MapNode<T,U>* _pNewNode)
+		void insert(MapNode<TKey,TData>* _parent, MapNode<TKey,TData>* _pNewNode)
 		{
 			if (m_Size == 0)
 			{
@@ -119,12 +121,12 @@ namespace CORE_LIB
 				}
 			}
 		}
-		void insert(const U& _key, const T& _data)
+		void insert(const TKey& _key, const TData& _data)
 		{
-			MapNode<T,U>* pNewNode = new MapNode<T,U>(_data, _key);
+			MapNode<TKey, TData>* pNewNode = new MapNode<TKey, TData>(_key, _data);
 			insert(m_pRoot, pNewNode);
 		}
-		bool find(const U& _inKey, MapNode<T,U>* _currentNode, T& _outFoundData)
+		bool find(const TKey& _inKey, MapNode<TKey, TData>* _currentNode, TData& _outFoundData)
 		{
 			/*if (_inKey == _currentNode)
 			if (_inKey < _currentNode->getData())
@@ -139,8 +141,8 @@ namespace CORE_LIB
 			return false;
 		}
 	private:
-		MapNode<T,U>* m_pRoot;
-		size_t m_Size;
+		MapNode<TKey,TData>* m_pRoot;
+		size_t				 m_Size;
 	};
 
 }; //CORE_LIB
