@@ -42,6 +42,14 @@ namespace CORE_LIB
 		{
 			return m_pRight;
 		}
+		const MapNode<TKey, TData>* getLeftChild() const
+		{
+			return m_pLeft;
+		}
+		const MapNode<TKey, TData>* getRightChild() const
+		{
+			return m_pRight;
+		}
 		void setLeftChild(MapNode<TKey,TData>* _pLeft)
 		{
 			m_pLeft = _pLeft;
@@ -82,9 +90,14 @@ namespace CORE_LIB
 		Map() : m_pRoot(nullptr), m_Size(0)
 		{
 		}
-		/*TODO--/
-		constructors
-		/-----*/
+		//copy constructor
+		Map(const Map<TKey,TData>& _copy) : m_pRoot(nullptr), m_Size(0)
+		{
+			if (_copy.getSize() > 0)
+			{
+				_copyFromPreOrder(_copy.getRoot());
+			}
+		}
 
 	public:
 		/**insert new Node
@@ -109,6 +122,17 @@ namespace CORE_LIB
 		*/
 		const MapNode<TKey, TData>* find(const TKey& _key, MapNode<TKey, TData>* _currentNode = nullptr) const;
 
+		const MapNode<TKey, TData>* getRoot() const { return m_pRoot; }
+		size_t						getSize() const { return m_Size;  }
+		/*
+		**Puts entire tree into array, pointed by argument, specified
+		@_pOut  = pointer to array, to be filled
+		@_pRoot = pointer to tree root
+		*/
+		void						toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot);
+
+	private:
+		void _copyFromPreOrder(const MapNode<TKey, TData>* _pRoot);
 	private:
 		MapNode<TKey,TData>* m_pRoot;
 		size_t				 m_Size;
@@ -190,6 +214,38 @@ namespace CORE_LIB
 			}
 		}
 		return nullptr;
+	}
+
+	template <class TKey, class TData>
+	void Map<TKey, TData>::_copyFromPreOrder(const MapNode<TKey, TData>* _pRoot)
+	{
+		if (_pRoot != nullptr)
+		{
+			insert(_pRoot->getKey(), _pRoot->getData());
+			_copyFromPreOrder(_pRoot->getLeftChild());
+			_copyFromPreOrder(_pRoot->getRightChild());
+		}
+	}
+
+	template <class TKey, class TData>
+	void Map<TKey, TData>::toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot)
+	{
+		static uint32 index = 0;
+		if (m_Size > 0)
+		{
+			if (_pRoot != nullptr)
+			{
+				_pOut[index] = _pRoot->getData();
+				++index;
+				toArray(_pOut, _pRoot->getLeftChild());
+				toArray(_pOut, _pRoot->getRightChild());
+			}
+		}
+
+		if (index >= m_Size)
+		{
+			index = 0;
+		}
 	}
 
 }; //CORE_LIB

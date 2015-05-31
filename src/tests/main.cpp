@@ -204,9 +204,40 @@ bool testMap()
 	intMap.insert(String(_T("Forty Nine")), 49);
 	intMap.insert(String(_T("Elleven")), 11);
 	intMap.insert(String(_T("Ninety Nine")), 99);
+	intMap.insert(String(_T("Ninety Nine")), 99);
+	intMap.insert(String(_T("One hundred")), 101);
+	intMap.insert(String(_T("One hundred")), 101);
+	intMap.insert(String(_T("One hundred")), 101);
+	intMap.insert(String(_T("One hundred")), 101);
+	intMap.insert(String(_T("One hundred")), 101);
+	intMap.insert(String(_T("Eighty six")), 86);
 	intMap.insert(String(_T("Thirty Three")), 33);
 	intMap.insert(String(_T("Twenty One")), 21);
 
+	const MapNode<String, int>* pFoundNode = intMap.find(_T("Ninety Nine"));
+
+	Map<String, int> intMapCopy(intMap);
+
+	int *pBuffer = new int[intMapCopy.getSize()];
+	memset(pBuffer, 0, sizeof(int) * intMapCopy.getSize());
+
+	intMapCopy.toArray(pBuffer, intMapCopy.getRoot());
+
+	for (uint32 i = 0; i < intMapCopy.getSize(); ++i)
+	{
+		std::cout << "pBuffer[i]: " << pBuffer[i] << std::endl;
+	}
+
+	int *pBufferCopy = new int[intMap.getSize()];
+	memset(pBufferCopy, 0, sizeof(int) * intMap.getSize());
+
+	intMap.toArray(pBufferCopy, intMap.getRoot());
+
+	for (uint32 i = 0; i < intMap.getSize(); ++i)
+	{
+		std::cout << "pBufferCopy[i]: " << pBufferCopy[i] << std::endl;
+	}
+	delete pBufferCopy;
 	return true;
 }
 int main()
