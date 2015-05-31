@@ -90,6 +90,13 @@ namespace CORE_LIB
 		Map() : m_pRoot(nullptr), m_Size(0)
 		{
 		}
+		Map(const TKey* _keys, const TData* _values, size_t _numKeys, size_t _numValues) : Map()
+		{
+			for (size_t i = 0; i < _numKeys; ++i)
+			{
+				insert(_keys[i], _values[i]);
+			}
+		}
 		//copy constructor
 		Map(const Map<TKey,TData>& _copy) : m_pRoot(nullptr), m_Size(0)
 		{
@@ -97,6 +104,17 @@ namespace CORE_LIB
 			{
 				_copyFromPreOrder(_copy.getRoot());
 			}
+		}
+
+	public:
+		const Map<TKey, TData>& operator=(const Map<TKey, TData>& _rhs)
+		{
+			if (_copy.getSize() > 0)
+			{
+				_copyFromPreOrder(_copy.getRoot());
+			}
+
+			return *this;
 		}
 
 	public:
