@@ -17,13 +17,15 @@ namespace CORE_LIB
 		}
 
 		//constructor with 2 arguments
-		MapNode(const TKey& _key, const TData& _data) : MapNode(), m_Key(_key), m_Data(_data)
+		MapNode(const TKey& _key, const TData& _data) : MapNode()
 		{
+			m_Key  = _key;
+			m_Data = _data;
 		}
 
 		//constructor with 4 arguments
 		MapNode(const TKey& _key, const TData& _data, MapNode<TKey, TData>* _left, MapNode<TKey, TData>* _right)
-			: MapNode(_key, _data) m_pLeft(_left), m_pRight(_right)
+			: MapNode(_key, _data), m_pLeft(_left), m_pRight(_right)
 		{
 		}
 
@@ -100,6 +102,8 @@ namespace CORE_LIB
 		Map() : m_pRoot(nullptr), m_Size(0)
 		{
 		}
+
+		//constructor from arrays
 		Map(const TKey* _keys, const TData* _values, size_t _numKeys, size_t _numValues) : Map()
 		{
 			for (size_t i = 0; i < _numKeys; ++i)
@@ -107,8 +111,9 @@ namespace CORE_LIB
 				insert(_keys[i], _values[i]);
 			}
 		}
+
 		//copy constructor
-		Map(const Map<TKey, TData>& _copy) : m_pRoot(nullptr), m_Size(0)
+		Map(const Map<TKey, TData>& _copy) : Map()
 		{
 			if (_copy.getSize() > 0)
 			{
@@ -140,7 +145,7 @@ namespace CORE_LIB
 			*/
 		void insert(const TKey& _key, const TData& _data)
 		{
-			MapNode<TKey, TData>* pNewNode = new MapNode<TKey, TData>(_key, _data);
+			auto pNewNode = new MapNode<TKey, TData>(_key, _data);
 			insert(m_pRoot, pNewNode);
 		}
 
@@ -163,7 +168,7 @@ namespace CORE_LIB
 		void _copyFromPreOrder(const MapNode<TKey, TData>* _pRoot);
 	private:
 		MapNode<TKey, TData>* m_pRoot;
-		size_t				 m_Size;
+		size_t				  m_Size;
 	};
 
 	//class Map methods definition
