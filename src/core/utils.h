@@ -10,7 +10,7 @@ namespace CORE_LIB
 	namespace UTILS
 	{
 		template <class TKey, class TData>
-		static void vecToMap(const TVector<TKey>& _inVecKeys, const TVector<TData>& _inVecValues, Map<TKey, TData>& _outMap)
+		static void vecToMap(const TVector<TKey>& _inVecKeys, const TVector<TData>& _inVecValues, TMap<TKey, TData>& _outMap)
 		{
 			_outMap.clear();
 
@@ -21,7 +21,7 @@ namespace CORE_LIB
 		}
 
 		template <class TKey, class TData>
-		static void listToMap(const TList<TKey>& _inListKeys, const TList<TData>& _inListValues, Map<TKey, TData>& _outMap)
+		static void listToMap(const TList<TKey>& _inListKeys, const TList<TData>& _inListValues, TMap<TKey, TData>& _outMap)
 		{
 			_outMap.clear();
 			TList_const_iterator<TKey> itKey = _inListKeys.constIterator(); 
@@ -56,28 +56,28 @@ namespace CORE_LIB
 		}
 
 		template <class TKey, class TData>
-		static void mapToVec(const Map<TKey, TData>& _inMap, TVector<TData>& _outVec)
+		static void mapToVec(const TMap<TKey, TData>& _inMap, TVector<TData>& _outVec)
 		{
 			_outVec.clear();
 
-			TData* pDataBuffer = new TData[_inMap.getSize()];
+			TData* pDataBuffer = new TData[_inMap.size()];
 			_inMap.toArray(pDataBuffer);
 
-			for (size_t i = 0; i < _inMap.getSize(); ++i)
+			for (size_t i = 0; i < _inMap.size(); ++i)
 			{
 				_outVec.push_back(pDataBuffer[i]);
 			}
 		}
 
 		template <class TKey, class TData>
-		static void mapToList(const Map<TKey, TData>& _inMap, TList<TData>& _outList)
+		static void mapToList(const TMap<TKey, TData>& _inMap, TList<TData>& _outList)
 		{
 			_outList.clear();
 
-			TData* pDataBuffer = new TData[_inMap.getSize()];
+			TData* pDataBuffer = new TData[_inMap.size()];
 			_inMap.toArray(pDataBuffer);
 
-			for (size_t i = 0; i < _inMap.getSize(); ++i)
+			for (size_t i = 0; i < _inMap.size(); ++i)
 			{
 				_outList.push_back(pDataBuffer[i]);
 			}
