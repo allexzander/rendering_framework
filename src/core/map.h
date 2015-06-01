@@ -162,7 +162,15 @@ namespace CORE_LIB
 		@_pOut  = pointer to array, to be filled
 		@_pRoot = pointer to tree root
 		*/
-		void						toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot);
+		void						toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot) const;
+
+		/*
+		**Removes all leafs and sets m_Size to 0
+		*/
+		void clear()
+		{
+			assert(false && "Implement me!!!");
+		}
 
 	private:
 		void _copyFromPreOrder(const MapNode<TKey, TData>* _pRoot);
@@ -261,7 +269,7 @@ namespace CORE_LIB
 	}
 
 	template <class TKey, class TData>
-	void Map<TKey, TData>::toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot)
+	void Map<TKey, TData>::toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot) const
 	{
 		static uint32 index = 0;
 		if (m_Size > 0)

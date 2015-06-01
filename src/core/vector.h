@@ -450,7 +450,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector<T>::TVector(const T* _pDataArray, size_t _numData)
+	TVector<T>::TVector(const T* _pDataArray, size_t _numData) : TVector()
 	{
 		for (size_t i = 0; i < _numData; ++i)
 		{
