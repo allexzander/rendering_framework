@@ -61,7 +61,7 @@ namespace CORE_LIB
 			_outVec.clear();
 
 			TData* pDataBuffer = new TData[_inMap.getSize()];
-			_inMap.toArray(pDataBuffer, _inMap.getRoot());
+			_inMap.toArray(pDataBuffer);
 
 			for (size_t i = 0; i < _inMap.getSize(); ++i)
 			{
@@ -75,7 +75,7 @@ namespace CORE_LIB
 			_outList.clear();
 
 			TData* pDataBuffer = new TData[_inMap.getSize()];
-			_inMap.toArray(pDataBuffer, _inMap.getRoot());
+			_inMap.toArray(pDataBuffer);
 
 			for (size_t i = 0; i < _inMap.getSize(); ++i)
 			{

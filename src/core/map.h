@@ -160,20 +160,24 @@ namespace CORE_LIB
 		/*
 		**Puts entire tree into array, pointed by argument, specified
 		@_pOut  = pointer to array, to be filled
-		@_pRoot = pointer to tree root
 		*/
-		void						toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot) const;
+		void						toArray(TData* _pOut) const
+		{
+			_toArray(_pOut, m_pRoot);
+		}
 
 		/*
 		**Removes all leafs and sets m_Size to 0
 		*/
 		void clear()
 		{
-			assert(false && "Implement me!!!");
+			_clear(m_pRoot);
 		}
 
 	private:
+		void _toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot) const;
 		void _copyFromPreOrder(const MapNode<TKey, TData>* _pRoot);
+		void _clear(MapNode<TKey, TData>* _pRoot);
 	private:
 		MapNode<TKey, TData>* m_pRoot;
 		size_t				  m_Size;
@@ -269,7 +273,7 @@ namespace CORE_LIB
 	}
 
 	template <class TKey, class TData>
-	void Map<TKey, TData>::toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot) const
+	void Map<TKey, TData>::_toArray(TData* _pOut, const MapNode<TKey, TData>* _pRoot) const
 	{
 		static uint32 index = 0;
 		if (m_Size > 0)
@@ -278,8 +282,8 @@ namespace CORE_LIB
 			{
 				_pOut[index] = _pRoot->getData();
 				++index;
-				toArray(_pOut, _pRoot->getLeftChild());
-				toArray(_pOut, _pRoot->getRightChild());
+				_toArray(_pOut, _pRoot->getLeftChild());
+				_toArray(_pOut, _pRoot->getRightChild());
 			}
 		}
 
@@ -287,6 +291,29 @@ namespace CORE_LIB
 		{
 			index = 0;
 		}
+	}
+
+	template <class TKey, class TData>
+	void Map<TKey, TData>::_clear(MapNode<TKey, TData>* _pRoot)
+	{
+		if (_pRoot == nullptr)
+		{
+			return;
+		}
+
+		if (_pRoot->getLeftChild() != nullptr)
+		{
+			_clear(_pRoot->getLeftChild());
+		}
+
+		if (_pRoot->getRightChild() != nullptr)
+		{
+			_clear(_pRoot->getRightChild());
+		}
+
+		delete _pRoot;
+		_pRoot = nullptr;
+		--m_Size;
 	}
 
 }; //CORE_LIB
