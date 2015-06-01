@@ -367,6 +367,7 @@ namespace CORE_LIB
 		TVector();
 		TVector(size_t _initialCapacity);
 		TVector(const TVector<T>& _source);
+		TVector(const T* _pDataArray, size_t _numData);
 		const TVector & operator=(const TVector & _rhs);
 		~TVector();
 
@@ -445,6 +446,15 @@ namespace CORE_LIB
 		for (size_t i = 0; i < _source.size(); ++i)
 		{
 			push_back(_source[i]);
+		}
+	}
+
+	template <class T>
+	TVector<T>::TVector(const T* _pDataArray, size_t _numData)
+	{
+		for (size_t i = 0; i < _numData; ++i)
+		{
+			push_back(_pDataArray[i]);
 		}
 	}
 

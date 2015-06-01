@@ -248,11 +248,22 @@ namespace CORE_LIB
 		TList() : m_pHead(nullptr), m_pTail(nullptr), m_Size(0)
 		{
 		}
+
 		//copy constructor
 		TList(const TList<T>& _source) : TList()
 		{
 			*this = _source;
 		}
+
+		//constructor from array
+		TList(const T* _pData, size_t _numData) : TList()
+		{
+			for (size_t i = 0; i < _numData; ++i)
+			{
+				push_back(_pData[i]);
+			}
+		}
+
 		const TList& operator=(const TList & _rhs)
 		{
 			clear();
