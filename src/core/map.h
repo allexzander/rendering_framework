@@ -152,7 +152,11 @@ namespace CORE_LIB
 		/**returns const Node*, if found in a tree
 		nullptr, otherwise
 		*/
-		const TMapNode<TKey, TData>* find(const TKey& _key, TMapNode<TKey, TData>* _currentNode = nullptr) const;
+		TMapNode<TKey, TData>* find(const TKey& _key, TMapNode<TKey, TData>* _currentNode = nullptr) const;
+
+		TMapNode<TKey, TData>* findParent(const TMapNode<TKey, TData>* _child, TMapNode<TKey, TData>* _currentNode = nullptr) const;
+
+		TMapNode<TKey, TData>* findMax(TMapNode<TKey, TData>* _currentNode);
 
 		const TMapNode<TKey, TData>* getRoot() const { return m_pRoot; }
 		size_t						 size()	   const { return m_Size;  }
@@ -170,6 +174,99 @@ namespace CORE_LIB
 		void clear()
 		{
 			_clear(m_pRoot);
+		}
+
+		//Removes Node from Map
+		bool remove(const TKey& _key)
+		{
+			auto pFoundNode = find(_key);
+
+			if (pFoundNode == nullptr)
+			{
+				return false;
+			}
+
+			//Node to be removed is root, and there are no children
+			if (pFoundNode == m_pRoot && (m_pRoot->getLeftChild() == nullptr && m_pRoot->getRightChild() == nullptr))
+			{
+				delete m_pRoot;
+				m_pRoot = nullptr;
+				m_Size = 0;
+				return true;
+			}
+
+			TMapNode<TKey, TData>* pNodeToDelete = nullptr;
+			TMapNode<TKey, TData>* pParent = nullptr;
+
+
+			//Node to be removed has left child
+			if (pFoundNode->getLeftChild() == nullptr && pFoundNode->getRightChild() != nullptr)
+			{
+				pNodeToDelete = pFoundNode->getRightChild();
+				pFoundNode->setKey(pNodeToDelete->getKey());
+				pFoundNode->setData(pNodeToDelete->getData());
+				pFoundNode->setLeftChild(pNodeToDelete->getLeftChild());
+				pFoundNode->setRightChild(pNodeToDelete->getRightChild());
+			}
+			//Node to be removed has right child
+			else if (pFoundNode->getLeftChild() != nullptr && pFoundNode->getRightChild() == nullptr)
+			{
+				pNodeToDelete = pFoundNode->getLeftChild();
+				pFoundNode->setKey(pNodeToDelete->getKey());
+				pFoundNode->setData(pNodeToDelete->getData());
+				pFoundNode->setLeftChild(pNodeToDelete->getLeftChild());
+				pFoundNode->setRightChild(pNodeToDelete->getRightChild());
+			}
+			//Node to be removed doesn't have any children
+			else if (pFoundNode->getLeftChild() == nullptr && pFoundNode->getRightChild() == nullptr)
+			{
+				pNodeToDelete = pFoundNode;
+				pParent		  = findParent(pNodeToDelete);
+
+				if (pParent != nullptr)
+				{
+					if (pParent->getLeftChild() == pNodeToDelete)
+					{
+						pParent->setLeftChild(nullptr);
+					}
+					else
+					{
+						pParent->setRightChild(nullptr);
+					}
+				}
+			}
+			//Node to be removed has 2 children
+			else 
+			{
+				//Find max key Node in left subtree, and replace current node with found max Node's data(key, value)
+				pNodeToDelete = findMax(pFoundNode->getLeftChild());
+				pParent = findParent(pNodeToDelete);
+				pFoundNode->setKey(pNodeToDelete->getKey());
+				pFoundNode->setData(pNodeToDelete->getData());
+
+				if (pParent != nullptr)
+				{
+					if (pParent->getLeftChild() == pNodeToDelete)
+					{
+						pParent->setLeftChild(nullptr);
+					}
+					else
+					{
+						pParent->setRightChild(nullptr);
+					}
+				}
+
+			}
+
+			//delete hanging Node
+			if (pNodeToDelete != nullptr)
+			{
+				delete pNodeToDelete;
+			}
+
+			--m_Size;
+
+			return true;
 		}
 
 	private:
@@ -234,7 +331,7 @@ namespace CORE_LIB
 	}
 
 	template <class TKey, class TData>
-	const TMapNode<TKey, TData>* TMap<TKey, TData>::find(const TKey& _key, TMapNode<TKey, TData>* _currentNode = nullptr) const
+	TMapNode<TKey, TData>* TMap<TKey, TData>::find(const TKey& _key, TMapNode<TKey, TData>* _currentNode = nullptr) const
 	{
 		if (m_Size > 0)
 		{
@@ -265,6 +362,57 @@ namespace CORE_LIB
 				}
 			}
 		}
+		return nullptr;
+	}
+
+	template <class TKey, class TData>
+	TMapNode<TKey, TData>* TMap<TKey, TData>::findParent(const TMapNode<TKey, TData>* _child, TMapNode<TKey, TData>* _currentNode = nullptr) const
+	{
+		if (m_Size > 0)
+		{
+			if (_currentNode == nullptr)
+			{
+				_currentNode = m_pRoot;
+			}
+
+			if (_currentNode->getLeftChild() == _child || _currentNode->getRightChild() == _child)
+			{
+				return _currentNode;
+			}
+
+			if (_child->getKey() < _currentNode->getKey())
+			{
+				//search in left subtree
+				if (_currentNode->getLeftChild() != nullptr)
+				{
+					return findParent(_child, _currentNode->getLeftChild());
+				}
+			}
+			else
+			{
+				//search in right subtree
+				if (_currentNode->getRightChild() != nullptr)
+				{
+					return findParent(_child, _currentNode->getRightChild());
+				}
+			}
+		}
+		return nullptr;
+	}
+
+	template <class TKey, class TData>
+	TMapNode<TKey, TData>* TMap<TKey, TData>::findMax(TMapNode<TKey, TData>* _currentNode)
+	{
+		if (_currentNode != nullptr)
+		{
+			if (_currentNode->getRightChild() == nullptr)
+			{
+				return _currentNode;
+			}
+
+			return findMax(_currentNode->getRightChild());
+		}
+
 		return nullptr;
 	}
 
