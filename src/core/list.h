@@ -9,45 +9,40 @@ namespace CORE_LIB
 	//Forward declarations
 	template <class T> class TList;
 	template <class T> class TList_const_iterator;
+	template <class T> class TList_iterator;
 
-	//class Node
+	//TList Node
 	template <class T>
-	class Node
+	class TNode
 	{
+		friend class TList_iterator <T> ;
+		friend class TList_const_iterator <T>;
+		friend class TList<T>;
+
 	public:
 		//default constructor
-		Node() : m_pNext(nullptr)
+		TNode() : m_pNext(nullptr)
 		{
 		}
 		//constructor with 1 argument
-		Node(const T& _data) : Node(_data, nullptr)
+		TNode(const T& _data) : TNode(_data, nullptr)
 		{
 		}
 		//constructor with 2 arguments
-		Node(const T& _data, Node<T>* _pNext) : 
+		TNode(const T& _data, TNode<T>* _pNext) : 
 			m_Data(_data), m_pNext(_pNext)
 		{
 		}
 		//copy constructor
-		Node(const Node<T>& _source) :
-			Node(_source.getData(), _source.getNext())
+		TNode(const TNode<T>& _source) :
+			TNode(_source.m_Data, _source.m_pNext)
 		{
 		}
 
-	public:
-		void setNext(Node<T>* _pNext) { m_pNext = _pNext; }
-		void setData(const T& _data) { m_Data  = _data; }
-
-		Node<T>*	   getNext()	   { return m_pNext; }
-		const Node<T>* getNext() const { return m_pNext; }
-
-		T&		 getData()		 { return m_Data; }
-		const T& getData() const { return m_Data; }
-
 	private:
-		T	  m_Data;
-		Node* m_pNext;
-	}; //class Node
+		T	   m_Data;
+		TNode* m_pNext;
+	};
 
 	//TList_iterator
 	template <class T>
@@ -60,23 +55,22 @@ namespace CORE_LIB
 		{
 		}
 
-		TList_iterator(const TList_iterator& _copy) : TList_iterator()
+		TList_iterator(const TList_iterator& _copy) : m_pCurrentNode(_copy.getNode())
 		{
-			*this = _copy;
 		}
 
 	private:
-		TList_iterator(Node<T>* const _pNode) : m_pCurrentNode(_pNode)
+		TList_iterator(TNode<T>* _pNode) : m_pCurrentNode(_pNode)
 		{
 		}
 
 	public:
-		Node<T>* getNode() const { return m_pCurrentNode; }
+		TNode<T>* getNode() const { return m_pCurrentNode; }
 
 		T& getData() const
 		{
 			assert(m_pCurrentNode && "Error m_pCurrentNode");
-			return m_pCurrentNode->getData(); 
+			return m_pCurrentNode->m_Data; 
 		}
 
 		const TList_iterator& operator=(const TList_iterator& _rhs)
@@ -90,7 +84,7 @@ namespace CORE_LIB
 		{
 			if (m_pCurrentNode)
 			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
+				m_pCurrentNode = m_pCurrentNode->m_pNext;
 			}
 			else
 			{
@@ -103,18 +97,18 @@ namespace CORE_LIB
 		//postfix operator
 		TList_iterator operator++(int)
 		{
-			auto tempNode = m_pCurrentNode;
+			auto pTempNode = m_pCurrentNode;
 
 			if (m_pCurrentNode)
 			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
+				m_pCurrentNode = m_pCurrentNode->m_pNext;
 			}
 			else
 			{
 				throw std::out_of_range("Iterator out of range!");
 			}
 
-			return tempNode;
+			return pTempNode;
 		}
 
 		T& operator*() const
@@ -143,7 +137,7 @@ namespace CORE_LIB
 		}
 
 	private:
-		Node<T>* m_pCurrentNode;
+		TNode<T>* m_pCurrentNode;
 	}; //class TList_iterator
 
 	//TList_const_iterator
@@ -158,23 +152,22 @@ namespace CORE_LIB
 		{
 		}
 
-		TList_const_iterator(const TList_const_iterator& _copy) : TList_const_iterator()
+		TList_const_iterator(const TList_const_iterator& _copy) : m_pCurrentNode(_copy.getNode())
 		{
-			*this = _copy;
 		}
 
 	private:
-		TList_const_iterator(Node<T>* const _pNode) : m_pCurrentNode(_pNode)
+		TList_const_iterator(TNode<T>* _pNode) : m_pCurrentNode(_pNode)
 		{
 		}
 
 	public:
-		Node<T>* const getNode() const { return m_pCurrentNode; }
+		TNode<T>* const getNode() const { return m_pCurrentNode; }
 
 		const T& getData() const
 		{
 			assert(m_pCurrentNode && "Error m_pCurrentNode");
-			return m_pCurrentNode->getData();
+			return m_pCurrentNode->m_Data;
 		}
 
 		const TList_const_iterator& operator=(const TList_const_iterator& _rhs)
@@ -188,7 +181,7 @@ namespace CORE_LIB
 		{
 			if (m_pCurrentNode)
 			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
+				m_pCurrentNode = m_pCurrentNode->m_pNext;
 			}
 			else
 			{
@@ -201,18 +194,18 @@ namespace CORE_LIB
 		//postfix operator
 		TList_const_iterator operator++(int)
 		{
-			auto tempNode = m_pCurrentNode;
+			auto pTempNode = m_pCurrentNode;
 
 			if (m_pCurrentNode)
 			{
-				m_pCurrentNode = m_pCurrentNode->getNext();
+				m_pCurrentNode = m_pCurrentNode->m_pNext;
 			}
 			else
 			{
 				throw std::out_of_range("Iterator out of range!");
 			}
 
-			return tempNode;
+			return pTempNode;
 		}
 
 		const T& operator*() const
@@ -236,7 +229,7 @@ namespace CORE_LIB
 		}
 
 	private:
-		Node<T>* m_pCurrentNode;
+		TNode<T>* m_pCurrentNode;
 	}; //class TList_const_iterator
 
 	//TList
@@ -273,10 +266,12 @@ namespace CORE_LIB
 			}
 			return *this;
 		}
+
 		~TList()
 		{
 			clear();
 		}
+
 	public:
 		size_t size() const { return m_Size; }
 
@@ -288,11 +283,10 @@ namespace CORE_LIB
 		void clear();
 
 		void erase(const TList_const_iterator<T>& _pos);
-		void erase(Node<T>* const _pPos);
 		void erase(const T& _data);
 		void insert(TList_iterator<T>& _after, const T& _data);
 
-		const T& at(uint32 _index) const;
+		const T& at(size_t _index) const;
 
 		const T& back()  const;
 		const T& front() const;
@@ -309,28 +303,28 @@ namespace CORE_LIB
 		TList_iterator<T>		findFirst(const T& _key);
 		TList_const_iterator<T> findFirst(const T& _key) const;
 
-		TList_iterator<T> findIter(const TList_const_iterator<T>& _it);
+		TList_iterator<T>		findIter(const TList_const_iterator<T>& _it);
 		TList_const_iterator<T> findIter(const TList_const_iterator<T>& _it) const;
 
 	private:
-		Node<T>* m_pHead;
-		Node<T>* m_pTail;
-		size_t	 m_Size;
+		TNode<T>* m_pHead;
+		TNode<T>* m_pTail;
+		size_t	  m_Size;
 	};
 
 	template <class T>
 	void TList<T>::push_back(const T& _data)
 	{
-		auto newNode = new Node<T>(_data);
+		auto pNewNode = new TNode<T>(_data);
 
 		if (m_Size == 0)
 		{
-			m_pHead = m_pTail = newNode;
+			m_pHead = m_pTail = pNewNode;
 		}
 		else
 		{
-			m_pTail->setNext(newNode);
-			m_pTail	= newNode;
+			m_pTail->m_pNext = pNewNode;
+			m_pTail = pNewNode;
 		}
 
 		++m_Size;
@@ -339,7 +333,7 @@ namespace CORE_LIB
 	template <class T>
 	void TList<T>::push_front(const T& _data)
 	{
-		auto pNewNode = new Node<T>(_data);
+		auto pNewNode = new TNode<T>(_data);
 
 		if (m_Size == 0)
 		{
@@ -347,7 +341,7 @@ namespace CORE_LIB
 		}
 		else
 		{
-			pNewNode->setNext(m_pHead);
+			pNewNode->m_pNext = m_pHead;
 			m_pHead = pNewNode;
 		}
 
@@ -370,14 +364,14 @@ namespace CORE_LIB
 			{
 				auto pPreTail = m_pHead;
 
-				while (pPreTail->getNext() && pPreTail->getNext() != m_pTail)
+				while (pPreTail->m_pNext && pPreTail->m_pNext != m_pTail)
 				{
-					pPreTail = pPreTail->getNext();
+					pPreTail = pPreTail->m_pNext;
 				}
 
 				delete m_pTail;
 				m_pTail = pPreTail;
-				pPreTail->setNext(nullptr);
+				pPreTail->m_pNext = nullptr;
 			}
 
 			--m_Size;
@@ -399,7 +393,7 @@ namespace CORE_LIB
 			else
 			{
 				auto pHead = m_pHead;
-				m_pHead = m_pHead->getNext();
+				m_pHead	   = m_pHead->m_pNext;
 				delete pHead;
 			}
 			--m_Size;
@@ -418,7 +412,7 @@ namespace CORE_LIB
 				while (pNextNode != nullptr)
 				{
 					auto currentNode = pNextNode;
-					pNextNode = pNextNode->getNext();
+					pNextNode = pNextNode->m_pNext;
 					delete currentNode;
 				}
 			}
@@ -431,7 +425,7 @@ namespace CORE_LIB
 			}
 
 			m_pHead = m_pTail = nullptr;
-			m_Size = 0;
+			m_Size	= 0;
 		}
 	}
 
@@ -454,89 +448,36 @@ namespace CORE_LIB
 			{
 				auto pPreNodeToDelete = m_pHead;
 
-				while (pPreNodeToDelete && pPreNodeToDelete->getNext() != _pos.getNode())
+				while (pPreNodeToDelete && pPreNodeToDelete->m_pNext != _pos.getNode())
 				{
-					pPreNodeToDelete = pPreNodeToDelete->getNext();
+					pPreNodeToDelete = pPreNodeToDelete->m_pNext;
 				}
 
 				if (pPreNodeToDelete != nullptr)
 				{
-					auto pNodeToDelete = pPreNodeToDelete->getNext();
+					auto pNodeToDelete = pPreNodeToDelete->m_pNext;
 
-					if (nodeToDelete)
+					if (pNodeToDelete)
 					{
-						pPreNodeToDelete->setNext(pNodeToDelete->getNext());
+						pPreNodeToDelete->m_pNext = pNodeToDelete->m_pNext;
 						delete pNodeToDelete;
 						--m_Size;
 						return;
 					}
 				}
 			}
-
-			assert(false && "Incorrect argument was specified!!!");
 		}
 		else
 		{
 			throw std::out_of_range("Index out of range!");
 		}
-	}
-
-	template <class T>
-	void TList<T>::erase(Node<T>* const _pPos)
-	{
-		TList_const_iterator<T> iter(_pPos);
-		erase(iter);
 	}
 
 	template <class T>
 	void TList<T>::erase(const T& _data)
 	{
-		if (m_Size > 0)
-		{
-			if (m_Size > 1)
-			{
-				if (m_pHead->getData() == _data)
-				{
-					pop_front();
-					return;
-				}
-				else if (m_pTail->getData() == _data)
-				{
-					pop_back();
-					return;
-				}
-
-				auto pCurrentNode = m_pHead;
-
-				while (pCurrentNode && pCurrentNode->getNext() && pCurrentNode->getNext()->getData() != _data)
-				{
-					pCurrentNode = pCurrentNode->getNext();
-				}
-
-				if (pCurrentNode != nullptr)
-				{
-					auto pNodeToDelete = pCurrentNode->getNext();
-					pCurrentNode->setNext(pNodeToDelete->getNext());
-					delete pNodeToDelete;
-					return;
-				}
-				
-			}
-			else
-			{
-				if (m_pHead->getData() == _data)
-				{
-					clear();
-					return;
-				}
-			}
-
-			throw std::invalid_argument("Index out of range!");
-		}
-		else
-		{
-			throw std::out_of_range("Index out of range!");
-		}
+		TList_const_iterator<T> it = findFirst(_data);
+		erase(it);
 	}
 
 	template <class T>
@@ -544,8 +485,8 @@ namespace CORE_LIB
 	{
 		if (findIter(_after))
 		{
-			auto pNewNode = new Node<T>(_data, _after.getNode()->getNext());
-			_after.getNode()->setNext(pNewNode);
+			auto pNewNode = new TNode<T>(_data, _after.getNode()->m_pNext);
+			_after.getNode()->m_pNext = pNewNode;
 
 			++m_Size;
 		}
@@ -560,22 +501,22 @@ namespace CORE_LIB
 		**Linear complicity traversal, by given index
 		@_index = index of node
 	*/
-	const T& TList<T>::at(uint32 _index) const
+	const T& TList<T>::at(size_t _index) const
 	{
-		if (m_Size > 0 && _index < m_Size)
+		if (_index > 0 && static_cast<size_t>(_index) < m_Size)
 		{
 			auto pCurrentNode = m_pHead;
-			uint32 i = 0;
-			for (uint32 i = 0; i < _index; ++i)
+			size_t i = 0;
+			for (size_t i = 0; i < _index; ++i)
 			{
-				if (!pCurrentNode->getNext())
+				if (!pCurrentNode->m_pNext)
 				{
 					break;
 				}
 
-				pCurrentNode = pCurrentNode->getNext();
+				pCurrentNode = pCurrentNode->m_pNext;
 			}
-			return pCurrentNode->getData();
+			return pCurrentNode->m_Data;
 		}
 		else
 		{
@@ -586,13 +527,13 @@ namespace CORE_LIB
 	template <class T>
 	const T& TList<T>::front() const
 	{
-		return m_pHead->getData();
+		return m_pHead->m_Data;
 	}
 
 	template <class T>
 	const T& TList<T>::back() const
 	{
-		return m_pTail->getData();
+		return m_pTail->m_Data;
 	}
 
 	template <class T>
