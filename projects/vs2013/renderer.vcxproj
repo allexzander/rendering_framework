@@ -44,6 +44,11 @@
     <TargetName>renderer_vs2013_w32_d</TargetName>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\</IntDir>
+    <TargetName>renderer_vs2013_w32_r</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>

@@ -78,12 +78,22 @@ namespace CORE_LIB
 			return m_Data;
 		}
 
+		TData& getData()
+		{
+			return m_Data;
+		}
+
 		void setData(const TData& _data)
 		{
 			m_Data = _data;
 		}
 
 		const TKey& getKey() const
+		{
+			return m_Key;
+		}
+
+		TKey& getKey()
 		{
 			return m_Key;
 		}
@@ -148,7 +158,6 @@ namespace CORE_LIB
 			_insert(m_pRoot, pNewNode);
 		}
 
-
 		/**returns const Node*, if found in a tree
 		nullptr, otherwise
 		*/
@@ -177,97 +186,11 @@ namespace CORE_LIB
 		}
 
 		//Removes Node from Map
-		bool remove(const TKey& _key)
-		{
-			auto pFoundNode = find(_key);
+		bool remove(const TKey& _key);
 
-			if (pFoundNode == nullptr)
-			{
-				return false;
-			}
-
-			//Node to be removed is root, and there are no children
-			if (pFoundNode == m_pRoot && (m_pRoot->getLeftChild() == nullptr && m_pRoot->getRightChild() == nullptr))
-			{
-				delete m_pRoot;
-				m_pRoot = nullptr;
-				m_Size = 0;
-				return true;
-			}
-
-			TMapNode<TKey, TData>* pNodeToDelete = nullptr;
-			TMapNode<TKey, TData>* pParent = nullptr;
-
-
-			//Node to be removed has left child
-			if (pFoundNode->getLeftChild() == nullptr && pFoundNode->getRightChild() != nullptr)
-			{
-				pNodeToDelete = pFoundNode->getRightChild();
-				pFoundNode->setKey(pNodeToDelete->getKey());
-				pFoundNode->setData(pNodeToDelete->getData());
-				pFoundNode->setLeftChild(pNodeToDelete->getLeftChild());
-				pFoundNode->setRightChild(pNodeToDelete->getRightChild());
-			}
-			//Node to be removed has right child
-			else if (pFoundNode->getLeftChild() != nullptr && pFoundNode->getRightChild() == nullptr)
-			{
-				pNodeToDelete = pFoundNode->getLeftChild();
-				pFoundNode->setKey(pNodeToDelete->getKey());
-				pFoundNode->setData(pNodeToDelete->getData());
-				pFoundNode->setLeftChild(pNodeToDelete->getLeftChild());
-				pFoundNode->setRightChild(pNodeToDelete->getRightChild());
-			}
-			//Node to be removed doesn't have any children
-			else if (pFoundNode->getLeftChild() == nullptr && pFoundNode->getRightChild() == nullptr)
-			{
-				pNodeToDelete = pFoundNode;
-				pParent		  = findParent(pNodeToDelete);
-
-				if (pParent != nullptr)
-				{
-					if (pParent->getLeftChild() == pNodeToDelete)
-					{
-						pParent->setLeftChild(nullptr);
-					}
-					else
-					{
-						pParent->setRightChild(nullptr);
-					}
-				}
-			}
-			//Node to be removed has 2 children
-			else 
-			{
-				//Find max key Node in left subtree, and replace current node with found max Node's data(key, value)
-				pNodeToDelete = findMax(pFoundNode->getLeftChild());
-				pParent = findParent(pNodeToDelete);
-				pFoundNode->setKey(pNodeToDelete->getKey());
-				pFoundNode->setData(pNodeToDelete->getData());
-
-				if (pParent != nullptr)
-				{
-					if (pParent->getLeftChild() == pNodeToDelete)
-					{
-						pParent->setLeftChild(nullptr);
-					}
-					else
-					{
-						pParent->setRightChild(nullptr);
-					}
-				}
-
-			}
-
-			//delete hanging Node
-			if (pNodeToDelete != nullptr)
-			{
-				delete pNodeToDelete;
-			}
-
-			--m_Size;
-
-			return true;
-		}
+	public:
+		TData&		 operator[](const TKey& _key);
+		const TData& operator[](const TKey& _key) const;
 
 	private:
 		/**Converts tree to array
@@ -469,6 +392,129 @@ namespace CORE_LIB
 		delete _pRoot;
 		_pRoot = nullptr;
 		--m_Size;
+	}
+
+	template <class TKey, class TData>
+	bool TMap<TKey, TData>::remove(const TKey& _key)
+	{
+		auto pFoundNode = find(_key);
+
+		if (pFoundNode == nullptr)
+		{
+			return false;
+		}
+
+		//Node to be removed is root, and there are no children
+		if (pFoundNode == m_pRoot && (m_pRoot->getLeftChild() == nullptr && m_pRoot->getRightChild() == nullptr))
+		{
+			delete m_pRoot;
+			m_pRoot = nullptr;
+			m_Size = 0;
+			return true;
+		}
+
+		TMapNode<TKey, TData>* pNodeToDelete = nullptr;
+		TMapNode<TKey, TData>* pParent = nullptr;
+
+
+		//Node to be removed has left child
+		if (pFoundNode->getLeftChild() == nullptr && pFoundNode->getRightChild() != nullptr)
+		{
+			pNodeToDelete = pFoundNode->getRightChild();
+			pFoundNode->setKey(pNodeToDelete->getKey());
+			pFoundNode->setData(pNodeToDelete->getData());
+			pFoundNode->setLeftChild(pNodeToDelete->getLeftChild());
+			pFoundNode->setRightChild(pNodeToDelete->getRightChild());
+		}
+		//Node to be removed has right child
+		else if (pFoundNode->getLeftChild() != nullptr && pFoundNode->getRightChild() == nullptr)
+		{
+			pNodeToDelete = pFoundNode->getLeftChild();
+			pFoundNode->setKey(pNodeToDelete->getKey());
+			pFoundNode->setData(pNodeToDelete->getData());
+			pFoundNode->setLeftChild(pNodeToDelete->getLeftChild());
+			pFoundNode->setRightChild(pNodeToDelete->getRightChild());
+		}
+		//Node to be removed doesn't have any children
+		else if (pFoundNode->getLeftChild() == nullptr && pFoundNode->getRightChild() == nullptr)
+		{
+			pNodeToDelete = pFoundNode;
+			pParent = findParent(pNodeToDelete);
+
+			if (pParent != nullptr)
+			{
+				if (pParent->getLeftChild() == pNodeToDelete)
+				{
+					pParent->setLeftChild(nullptr);
+				}
+				else
+				{
+					pParent->setRightChild(nullptr);
+				}
+			}
+		}
+		//Node to be removed has 2 children
+		else
+		{
+			//Find max key Node in left subtree, and replace current node with found max Node's data(key, value)
+			pNodeToDelete = findMax(pFoundNode->getLeftChild());
+			pParent = findParent(pNodeToDelete);
+			pFoundNode->setKey(pNodeToDelete->getKey());
+			pFoundNode->setData(pNodeToDelete->getData());
+
+			if (pParent != nullptr)
+			{
+				if (pParent->getLeftChild() == pNodeToDelete)
+				{
+					pParent->setLeftChild(nullptr);
+				}
+				else
+				{
+					pParent->setRightChild(nullptr);
+				}
+			}
+
+		}
+
+		//delete hanging Node
+		if (pNodeToDelete != nullptr)
+		{
+			delete pNodeToDelete;
+		}
+
+		--m_Size;
+
+		return true;
+	}
+
+	template <class TKey, class TData>
+	TData& TMap<TKey, TData>::operator[](const TKey& _key)
+	{
+		auto pFoundNode = find(_key);
+
+		if (pFoundNode != nullptr)
+		{
+			return pFoundNode->getData();
+		}
+		else
+		{
+			throw std::out_of_range("Element does not exist!");
+		}
+	}
+
+	template <class TKey, class TData>
+	const TData& TMap<TKey, TData>::operator[](const TKey& _key) const
+	{
+		auto pFoundNode = find(_key);
+
+		if (pFoundNode != nullptr)
+		{
+			return pFoundNode->getData();
+		}
+		else
+		{
+			throw std::out_of_range("Element does not exist!");
+		}
 	}
 
 }; //CORE_LIB
