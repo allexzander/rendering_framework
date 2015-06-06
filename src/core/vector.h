@@ -133,43 +133,47 @@ namespace CORE_LIB
 			return *m_pCurrentElement;
 		}
 
-		bool operator!=(const TVector_const_iterator& _rhs)
+		bool operator!=(const TVector_const_iterator& _rhs) const
 		{
 			return !(*this == _rhs);
 		}
 
-		bool operator==(const TVector_const_iterator& _rhs)
+		bool operator==(const TVector_const_iterator& _rhs) const
 		{
-			return (m_pBegin == _rhs.begin() && m_pEnd == _rhs.end()
-				&& m_pCurrentElement == _rhs.current());
+			return _areCompatible(*this, _rhs) && m_pCurrentElement == _rhs.current();
 		}
 
-		bool operator<(const TVector_const_iterator& _rhs)
+		bool operator<(const TVector_const_iterator& _rhs) const
 		{
-			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
-				&& m_pCurrentElement < _rhs.current());
+			return _areCompatible(*this, _rhs) && m_pCurrentElement < _rhs.current();
 		}
 
-		bool operator>(const TVector_const_iterator& _rhs)
+		bool operator>(const TVector_const_iterator& _rhs) const
 		{
-			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
-				&& m_pCurrentElement < _rhs.current());
+			return _areCompatible(*this, _rhs) && m_pCurrentElement > _rhs.current();
 		}
 
-		bool operator>=(const TVector_const_iterator& _rhs)
+		bool operator>=(const TVector_const_iterator& _rhs) const
 		{
-			return *this == _rhs || *this > _rhs;
+			return _areCompatible(*this, _rhs) && (*this == _rhs || *this > _rhs);
 		}
 
-		bool operator<=(const TVector_const_iterator& _rhs)
+		bool operator<=(const TVector_const_iterator& _rhs) const
 		{
-			return *this == _rhs || *this < _rhs;
+			return _areCompatible(*this, _rhs) && (*this == _rhs || *this < _rhs);
 		}
 
-		operator bool()
+		operator bool() const
 		{
 			return (m_pBegin != nullptr && m_pEnd != nullptr
 				&& m_pCurrentElement != nullptr);
+		}
+
+	private:
+		//pointing to same vector
+		bool _areCompatible(const TVector_const_iterator& _a, const TVector_const_iterator& _b) const
+		{
+			return _a.begin() == _b.begin() && _a.end() == _b.end();
 		}
 
 	private:
@@ -278,7 +282,6 @@ namespace CORE_LIB
 				if (m_pCurrentElement >= m_pEnd)
 				{
 					m_pCurrentElement = nullptr;
-
 				}
 			}
 
@@ -304,48 +307,52 @@ namespace CORE_LIB
 			return *m_pCurrentElement;
 		}
 
-		bool operator!=(const TVector_iterator& _rhs)
+		bool operator!=(const TVector_iterator& _rhs) const
 		{
 			return !(*this == _rhs);
 		}
 
-		bool operator==(const TVector_iterator& _rhs)
+		bool operator==(const TVector_iterator& _rhs) const
 		{
-			return (m_pBegin == _rhs.begin() && m_pEnd == _rhs.end()
-				&& m_pCurrentElement == _rhs.current());
+			return _areCompatible(*this, _rhs) && m_pCurrentElement == _rhs.current();
 		}
 
-		bool operator<(const TVector_iterator& _rhs)
+		bool operator<(const TVector_iterator& _rhs) const
 		{
-			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
-				&& m_pCurrentElement < _rhs.current());
+			return _areCompatible(*this, _rhs) && m_pCurrentElement < _rhs.current();
 		}
 
-		bool operator>(const TVector_iterator& _rhs)
+		bool operator>(const TVector_iterator& _rhs) const
 		{
-			return (m_pBegin < _rhs.begin() && m_pEnd < _rhs.end()
-				&& m_pCurrentElement < _rhs.current());
+			return _areCompatible(*this, _rhs) && m_pCurrentElement > _rhs.current();
 		}
 
-		bool operator>=(const TVector_iterator& _rhs)
+		bool operator>=(const TVector_iterator& _rhs) const
 		{
-			return *this == _rhs || *this > _rhs;
+			return _areCompatible(*this, _rhs) && (*this == _rhs || *this > _rhs);
 		}
 
-		bool operator<=(const TVector_iterator& _rhs)
+		bool operator<=(const TVector_iterator& _rhs) const
 		{
-			return *this == _rhs || *this < _rhs;
+			return _areCompatible(*this, _rhs) && (*this == _rhs || *this < _rhs);
 		}
 
-		operator bool()
+		operator bool() const
 		{
 			return (m_pBegin != nullptr && m_pEnd != nullptr
 				&& m_pCurrentElement != nullptr);
 		}
 
-		operator TVector_const_iterator()
+		operator TVector_const_iterator<T>()
 		{
-			return TVector_const_iterator(m_pBegin, m_pEnd);
+			return TVector_const_iterator<T>(m_pBegin, m_pEnd);
+		}
+
+	private:
+		//pointing to same vector
+		bool _areCompatible(const TVector_iterator<T>& _a, const TVector_iterator<T>& _b) const
+		{
+			return _a.begin() == _b.begin() && _a.end() == _b.end();
 		}
 
 	private:
@@ -386,13 +393,23 @@ namespace CORE_LIB
 
 		void reserve(size_t _newCap);
 
-		T&		 operator[](uint32 _index);
-		const T& operator[](uint32 _index) const;
+		T&		 operator[](int32 _index);
+		const T& operator[](int32 _index) const;
 
-		T&		 at(uint32 _index);
-		const T& at(uint32 _index) const;
+		T&		 at(int32 _index);
+		const T& at(int32 _index) const;
 
-		void erase(uint32 _pos);
+		/*
+		**Erases element at given position, reducing size by 1, in case of incorrect _pos throws out_of_range
+		@_pos = element position
+		*/
+		void erase(int32 _index)
+		{
+			TVector_iterator<T> it = TVector_iterator<T>(&m_pElements[0], (&m_pElements[m_Size]));
+			it += _index;
+			erase(it);
+		}
+
 		void erase(const TVector_iterator<T>& _pos);
 		void clear();
 		friend bool operator==(const TVector& _lhs, const TVector& _rhs)
@@ -417,8 +434,6 @@ namespace CORE_LIB
 		{
 			return !_lhs == _rhs;
 		}
-		//CORE_LIB::String glue(CORE_LIB::String& _delimiter);
-
 	}; //TVector declaration
 
 	//TVector definition
@@ -613,14 +628,16 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	T& TVector<T>::operator[](uint32 _index)
+	T& TVector<T>::operator[](int32 _index)
 	{
+		assert(_index >= 0 && (static_cast<size_t>(_index) < m_Size));
 		return m_pElements[_index];
 	}
 
 	template <class T>
-	const T& TVector<T>::operator[](uint32 _index) const
+	const T& TVector<T>::operator[](int32 _index) const
 	{
+		assert(_index >= 0 && (static_cast<size_t>(_index) < m_Size));
 		return m_pElements[_index];
 	}
 
@@ -629,9 +646,9 @@ namespace CORE_LIB
 		**Returns element by index, in case of incorrect index throws out_of_range
 		@_index = element location
 	*/
-	T& TVector<T>::at(uint32 _index)
+	T& TVector<T>::at(int32 _index)
 	{
-		if (_index > (m_Size - 1))
+		if (!(_index >= 0 && (static_cast<size_t>(_index) < m_Size)))
 		{
 			throw std::out_of_range("Index out of range!");
 		}
@@ -644,9 +661,9 @@ namespace CORE_LIB
 		**Returns const reference to an element by index, in case of incorrect index throws out_of_range
 		@_index = element location
 	*/
-	const T& TVector<T>::at(uint32 _index) const
+	const T& TVector<T>::at(int32 _index) const
 	{
-		if (_index > (m_Size - 1))
+		if (!(_index >= 0 && (static_cast<size_t>(_index) < m_Size)))
 		{
 			throw std::out_of_range("Index out of range!");
 		}
@@ -656,46 +673,21 @@ namespace CORE_LIB
 
 	template <class T>
 	/*
-		**Erases element at given position, reducing size by 1, in case of incorrect _pos throws out_of_range
-		@_pos = element position
-	*/
-	void TVector<T>::erase(uint32 _pos)
-	{
-		if (m_Size > 0 && _pos < m_Size)
-		{
-			auto tempBuffer = new T[m_Capacity];
-			uint32 i = 0;
-			uint32 j = 0;
-			while (j < m_Size)
-			{
-				if (j != _pos)
-				{
-					tempBuffer[i++] = m_pElements[j];
-				}
-				++j;
-			}
-			delete[] m_pElements;
-			m_pElements = tempBuffer;
-
-			--m_Size;
-		}
-		else
-		{
-			throw std::out_of_range("Index out of range!");
-		}
-	}
-
-	template <class T>
-	/*
 		**Erases element at given iterator position, reducing size by 1, in case of incorrect _pos throws out_of_range
 		@_pos = element position
 	*/
 	void TVector<T>::erase(const TVector_iterator<T>& _pos)
 	{
-		if (_pos >= begin() && _pos < end())
+		int a = 5;
+		if (_pos >= iterator())
+		{
+			a = 6;
+		}
+
+		if (_pos && _pos >= iterator() && _pos.current() < iterator().end())
 		{
 			auto tempBuffer = new T[m_Capacity];
-			int32 i = 0;
+			size_t i = 0;
 			for (TVector_iterator<T> it = iterator(); it; ++it)
 			{
 				if (it != _pos)
@@ -724,32 +716,4 @@ namespace CORE_LIB
 			m_Size		= 0;
 		}
 	}
-
-	/*template <class T>
-	/*
-		**Returns CORE_LIB::String of T elements, delimited with specified character
-		@_delimiter = delimiting character
-	
-	CORE_LIB::String TVector<T>::glue(CORE_LIB::String& _delimiter)
-	{
-		CORE_LIB::String result = _T("");
-
-		if (m_Size > 0)
-		{
-			for (size_t i = 0; i < m_Size; ++i)
-			{
-				result += m_pElements[i];
-
-				if (i < m_Size - 1)
-				{
-					result += _delimiter;
-				}
-			}
-		}
-
-		return result;
-	}*/
-
-	//TVector definition
-
 }; //CORE_LIB
