@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 #include <assert.h>
-#include "commondefs.h"
+#include "..\commondefs.h"
 
 namespace CORE_LIB
 {
@@ -119,7 +119,7 @@ namespace CORE_LIB
 		{
 		}
 
-		TMap(const TKey* _keys, const TData* _values, size_t _numKeys, size_t _numValues) : TMap()
+		TMap(const TKey* _keys, const TData* _values, size_t _numKeys) : TMap()
 		{
 			for (size_t i = 0; i < _numKeys; ++i)
 			{

@@ -6,7 +6,7 @@
 #else
 typedef char TCHAR;
 #endif
-#include "commondefs.h"
+#include "..\commondefs.h"
 #include "vector.h"
 
 namespace CORE_LIB

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "commondefs.h"
-#include "vector.h"
-#include "list.h"
-#include "map.h"
+#include "containers\vector.h"
+#include "containers\list.h"
+#include "containers\map.h"
 
 namespace CORE_LIB
 {

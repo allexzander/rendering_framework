@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 #include <assert.h>
-#include "commondefs.h"
+#include "..\commondefs.h"
 
 namespace CORE_LIB
 {

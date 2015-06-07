@@ -84,15 +84,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\core\commondefs.h" />
-    <ClInclude Include="..\..\src\core\list.h" />
-    <ClInclude Include="..\..\src\core\map.h" />
-    <ClInclude Include="..\..\src\core\stack.h" />
-    <ClInclude Include="..\..\src\core\string.h" />
+    <ClInclude Include="..\..\src\core\containers\list.h" />
+    <ClInclude Include="..\..\src\core\containers\map.h" />
+    <ClInclude Include="..\..\src\core\containers\stack.h" />
+    <ClInclude Include="..\..\src\core\containers\string.h" />
+    <ClInclude Include="..\..\src\core\containers\vector.h" />
     <ClInclude Include="..\..\src\core\utils.h" />
-    <ClInclude Include="..\..\src\core\vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\core\string.cpp" />
+    <ClCompile Include="..\..\src\core\containers\string.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,9 @@
 #include <iostream>
-#include "..\core\string.h"
-#include "..\core\vector.h"
-#include "..\core\list.h"
-#include "..\core\map.h"
+#include "..\core\containers\string.h"
+#include "..\core\containers\vector.h"
+#include "..\core\containers\list.h"
+#include "..\core\containers\map.h"
+#include "..\core\containers\stack.h"
 #include <assert.h>
 
 
@@ -42,6 +43,10 @@ bool testString()
 	fruits.push_back(_T("pear"));
 	fruits.push_back(_T("orange"));
 	fruits.push_back(_T("lemon"));
+
+	fruits.erase(0);
+
+	String coconut = fruits.at(3);
 
 	String fruitsString;
 
@@ -187,10 +192,10 @@ bool testList()
 	TList<String> copyListStrings(listStrings);
 	TList<String> copyAssignedListStrings = copyListStrings;
 
-	TList_iterator<String> foundIt = listStrings.findFirst(_T(" my brave new"));
+	TList_iterator<String> foundIt = listStrings.findFirst(_T(" world!"));
 	TList_iterator<String> copyIt = foundIt;
-	//listStrings.erase(foundIt.getNode());
-	listStrings.erase(_T(" world!"));
+	listStrings.erase(foundIt);
+	listStrings.erase(_T(" my brave new"));
 	testResult = sizeAfterConstruction && sizeAfterClear 
 		&& sizeAfter2ElementsPushed && sizeAfter2ElementsPopped && sizeAfter1ElementPushed;
 
@@ -198,7 +203,7 @@ bool testList()
 }
 bool testMap()
 {
-	Map<String,int> intMap;
+	TMap<String,int> intMap;
 	intMap.insert(String(_T("Fifty Three")), 53);
 	intMap.insert(String(_T("Sixty One")), 61);
 	intMap.insert(String(_T("Forty Nine")), 49);
@@ -214,35 +219,63 @@ bool testMap()
 	intMap.insert(String(_T("Thirty Three")), 33);
 	intMap.insert(String(_T("Twenty One")), 21);
 
-	const MapNode<String, int>* pFoundNode = intMap.find(_T("Ninety Nine"));
+	const TMapNode<String, int>* pFoundNode = intMap.find(_T("Ninety Nine"));
 
-	Map<String, int> intMapCopy(intMap);
+	TMap<String, int> intMapCopy(intMap);
 
-	int *pBuffer = new int[intMapCopy.getSize()];
-	memset(pBuffer, 0, sizeof(int) * intMapCopy.getSize());
+	int *pBuffer = new int[intMapCopy.size()];
+	memset(pBuffer, 0, sizeof(int) * intMapCopy.size());
 
-	intMapCopy.toArray(pBuffer, intMapCopy.getRoot());
+	intMapCopy.toArray(pBuffer);
 
-	for (uint32 i = 0; i < intMapCopy.getSize(); ++i)
+	for (uint32 i = 0; i < intMapCopy.size(); ++i)
 	{
 		std::cout << "pBuffer[i]: " << pBuffer[i] << std::endl;
 	}
 
-	int *pBufferCopy = new int[intMap.getSize()];
-	memset(pBufferCopy, 0, sizeof(int) * intMap.getSize());
+	int *pBufferCopy = new int[intMap.size()];
+	memset(pBufferCopy, 0, sizeof(int) * intMap.size());
 
-	intMap.toArray(pBufferCopy, intMap.getRoot());
+	intMap.toArray(pBufferCopy);
 
-	for (uint32 i = 0; i < intMap.getSize(); ++i)
+	for (uint32 i = 0; i < intMap.size(); ++i)
 	{
 		std::cout << "pBufferCopy[i]: " << pBufferCopy[i] << std::endl;
 	}
 	delete pBufferCopy;
 	return true;
 }
+bool testStack()
+{
+	bool result = true;
+	int A = 5;
+	int B = 11;
+	int C = 21;
+
+	int* pIntA = &A;
+	int* pIntB = &B;
+	int* pIntC = &C;
+
+	TStack<int*> intStack;
+
+	intStack.push(pIntA);
+	intStack.push(pIntB);
+	intStack.push(pIntC);
+
+	TStack<int*> copyIntStack = intStack;
+
+
+	int* pInt = intStack.pop();
+	pInt = intStack.pop();
+	pInt = intStack.pop();
+	
+
+	return result;
+}
+
 int main()
 {
-	if (testString() && testVector() && testList() && testMap())
+	if (testString() && testVector() && testList() && testMap() && testStack())
 	{
 		std::cout << "All tests successfully completed."<<std::endl;
 	}

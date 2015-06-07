@@ -1,6 +1,6 @@
 #include "rendering_framework.h"
-#include "src\core\string.h"
-#include "src\core\vector.h"
+#include "src\core\containers\string.h"
+#include "src\core\containers\vector.h"
 #include <Windows.h>
 
 int main()
