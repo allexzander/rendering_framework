@@ -4,11 +4,15 @@
 #include "..\core\containers\list.h"
 #include "..\core\containers\map.h"
 #include "..\core\containers\stack.h"
+#include "..\vector3d.h"
+#include "..\vector4d.h"
+#include "..\vector2d.h"
 #include <assert.h>
 
 
 using namespace std;
 using namespace CORE_LIB;
+using namespace ALZ_RENDERER;
 
 bool testString()
 {
@@ -273,9 +277,52 @@ bool testStack()
 	return result;
 }
 
+//test 2D Vector
+
+bool test2DVector()
+{
+	Vector2D<float> v1(0.0f, 1.0f);
+	Vector2D<float> v2(0.0f, 1.0f);
+
+	float dotParallel = v1 * v2;
+
+	v2.x = 1.0f;
+	v2.y = 0.0f;
+
+	float dotPerpendicular = v1 * v2;
+
+	bool result = (dotParallel == 1.0f) && (dotPerpendicular == 0.0f);
+	Vector2D<float> v1Neg = -v1;
+	return result;
+}
+
+bool test3DVector()
+{
+	Vector3D<float> v1(0.0f, 0.0f, 1.0f);
+	Vector3D<float> v2(0.0f, 1.0f, 0.0f);
+
+	float dot = v1 * v2;
+
+	Vector3D<float> negV1 = -v1;
+	
+	return true;
+}
+
+bool test4DVector()
+{
+	Vector4D<float> v1(0.0f, 0.0f, 1.0f, 1.0f);
+	Vector4D<float> v2(0.0f, 1.0f, 0.0f, 0.0f);
+
+	Vector4D<float> cross = Cross(v1, v2);
+
+	Vector4D<float> negV1 = -v1;
+
+	return true;
+}
+
 int main()
 {
-	if (testString() && testVector() && testList() && testMap() && testStack())
+	if (testString() && testVector() && testList() && testMap() && testStack() && test2DVector() && test3DVector() && test4DVector())
 	{
 		std::cout << "All tests successfully completed."<<std::endl;
 	}
