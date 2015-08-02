@@ -264,9 +264,9 @@ namespace CORE_LIB
 		return false;
 	}
 
-	CORE_LIB::TVector<String> String::split(TCHAR _splitter) const
+	CORE_LIB::TVectorArray<String> String::split(TCHAR _splitter) const
 	{
-		CORE_LIB::TVector<String> result;
+		CORE_LIB::TVectorArray<String> result;
 
 		if (m_Length > 0)
 		{

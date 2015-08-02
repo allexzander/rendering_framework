@@ -52,7 +52,7 @@ namespace CORE_LIB
 
 		bool endsWith(const String& _pattern) const;
 
-		CORE_LIB::TVector<String> split(TCHAR _splitter) const;
+		CORE_LIB::TVectorArray<String> split(TCHAR _splitter) const;
 
 		operator const TCHAR*() const;
 

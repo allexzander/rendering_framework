@@ -36,7 +36,7 @@ bool testString()
 	String wantBeTrimmed = _T("Maybe                 other time?");
 	String iHaveNoSence = _T("                                                     ");
 
-	TVector<String> fruits(0);
+	TVectorArray<String> fruits(0);
 	fruits.push_back(_T("banana"));
 	fruits.push_back(_T("apple"));
 	fruits.push_back(_T("pineapple"));
@@ -50,7 +50,7 @@ bool testString()
 
 	String fruitsString;
 
-	for (TVector_const_iterator<String> it = fruits.constIterator(); it; ++it)
+	for (TVectorArray_const_iterator<String> it = fruits.constIterator(); it; ++it)
 	{
 		fruitsString += *it;
 		fruitsString += _T(";");
@@ -58,7 +58,7 @@ bool testString()
 
 	fruitsString.erase(fruitsString.legth() - 1, 1);
 
-	TVector<String> splittedString = fruitsString.split(_T(';'));
+	TVectorArray<String> splittedString = fruitsString.split(_T(';'));
 
 	bool testStringSplit = splittedString == fruits;
 
@@ -100,14 +100,14 @@ bool testVector()
 {
 	bool testResult = false;
 
-	TVector<int> emptyVector;
+	TVectorArray<int> emptyVector;
 
-	TVector<int> nonEmptyVector;
+	TVectorArray<int> nonEmptyVector;
 	nonEmptyVector.push_back(1);
 	nonEmptyVector.push_back(5);
 	nonEmptyVector.push_back(11);
 
-	TVector<String> wordsVector(5);
+	TVectorArray<String> wordsVector(5);
 
 	wordsVector.push_back(_T("door"));
 	wordsVector.push_back(_T("nose"));

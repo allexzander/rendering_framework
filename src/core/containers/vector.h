@@ -7,29 +7,29 @@
 namespace CORE_LIB
 {
 	//forward declarations
-	template <class T> class TVector;
-	template <class T> class TVector_terator;
+	template <class T> class TVectorArray;
+	template <class T> class TVectorArray_iterator;
 
-	//TVector_const_iterator
+	//TVectorArray_const_iterator
 	template <class T>
-	class TVector_const_iterator
+	class TVectorArray_const_iterator
 	{
-		//allow TVector to create TVector_const_iterator instances
-		friend class TVector<T>;
-		friend class TVector_terator<T>;
+		//allow TVectorArray to create TVectorArray_const_iterator instances
+		friend class TVectorArray<T>;
+		friend class TVectorArray_iterator<T>;
 
 	public:
-		TVector_const_iterator() : m_pBegin(nullptr),
+		TVectorArray_const_iterator() : m_pBegin(nullptr),
 			m_pEnd(nullptr), m_pCurrentElement(nullptr)
 		{
 		}
 
-		TVector_const_iterator(const TVector_const_iterator& it) : TVector_const_iterator(it.begin(), it.end())
+		TVectorArray_const_iterator(const TVectorArray_const_iterator& it) : TVectorArray_const_iterator(it.begin(), it.end())
 		{
 		}
 
 	private:
-		TVector_const_iterator(T* _begin, T* _end) : m_pBegin(_begin),
+		TVectorArray_const_iterator(T* _begin, T* _end) : m_pBegin(_begin),
 			m_pEnd(_end), m_pCurrentElement(_begin)
 		{
 		}
@@ -47,7 +47,7 @@ namespace CORE_LIB
 			}
 		}
 
-		const TVector_const_iterator& operator=(const TVector_const_iterator& _rhs)
+		const TVectorArray_const_iterator& operator=(const TVectorArray_const_iterator& _rhs)
 		{
 			m_pCurrentElement = m_pBegin = _rhs.begin();
 			m_pEnd = _rhs.end();
@@ -55,11 +55,11 @@ namespace CORE_LIB
 		}
 
 		/*++prefix operator*/
-		TVector_const_iterator& operator++()
+		TVectorArray_const_iterator& operator++()
 		{
 			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
 
-			assert(isValid && "TVector_const_iterator operator++()");
+			assert(isValid && "TVectorArray_const_iterator operator++()");
 
 			if (isValid)
 			{
@@ -74,13 +74,13 @@ namespace CORE_LIB
 		}
 
 		/*postfix++ operator*/
-		TVector_const_iterator operator++(int)
+		TVectorArray_const_iterator operator++(int)
 		{
-			TVector_const_iterator copySelf = *this;
+			TVectorArray_const_iterator copySelf = *this;
 
 			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
 
-			assert(isValid && "TVector_const_iterator operator++(int)");
+			assert(isValid && "TVectorArray_const_iterator operator++(int)");
 
 			if (isValid)
 			{
@@ -94,11 +94,11 @@ namespace CORE_LIB
 			return copySelf;
 		}
 
-		TVector_const_iterator& operator+=(int32 _value)
+		TVectorArray_const_iterator& operator+=(int32 _value)
 		{
 			bool isValid = m_pCurrentElement && m_pBegin && m_pEnd;
 
-			assert(isValid && "TVector_const_iterator operator++(int)");
+			assert(isValid && "TVectorArray_const_iterator operator++(int)");
 
 			if (isValid)
 			{
@@ -114,9 +114,9 @@ namespace CORE_LIB
 			return *this;
 		}
 
-		TVector_const_iterator operator+(int32 _value)
+		TVectorArray_const_iterator operator+(int32 _value)
 		{
-			TVector_const_iterator copy = *this;
+			TVectorArray_const_iterator copy = *this;
 
 			copy += value;
 
@@ -133,32 +133,32 @@ namespace CORE_LIB
 			return *m_pCurrentElement;
 		}
 
-		bool operator!=(const TVector_const_iterator& _rhs) const
+		bool operator!=(const TVectorArray_const_iterator& _rhs) const
 		{
 			return !(*this == _rhs);
 		}
 
-		bool operator==(const TVector_const_iterator& _rhs) const
+		bool operator==(const TVectorArray_const_iterator& _rhs) const
 		{
 			return _areCompatible(*this, _rhs) && m_pCurrentElement == _rhs.current();
 		}
 
-		bool operator<(const TVector_const_iterator& _rhs) const
+		bool operator<(const TVectorArray_const_iterator& _rhs) const
 		{
 			return _areCompatible(*this, _rhs) && m_pCurrentElement < _rhs.current();
 		}
 
-		bool operator>(const TVector_const_iterator& _rhs) const
+		bool operator>(const TVectorArray_const_iterator& _rhs) const
 		{
 			return _areCompatible(*this, _rhs) && m_pCurrentElement > _rhs.current();
 		}
 
-		bool operator>=(const TVector_const_iterator& _rhs) const
+		bool operator>=(const TVectorArray_const_iterator& _rhs) const
 		{
 			return _areCompatible(*this, _rhs) && (*this == _rhs || *this > _rhs);
 		}
 
-		bool operator<=(const TVector_const_iterator& _rhs) const
+		bool operator<=(const TVectorArray_const_iterator& _rhs) const
 		{
 			return _areCompatible(*this, _rhs) && (*this == _rhs || *this < _rhs);
 		}
@@ -171,7 +171,7 @@ namespace CORE_LIB
 
 	private:
 		//pointing to same vector
-		bool _areCompatible(const TVector_const_iterator& _a, const TVector_const_iterator& _b) const
+		bool _areCompatible(const TVectorArray_const_iterator& _a, const TVectorArray_const_iterator& _b) const
 		{
 			return _a.begin() == _b.begin() && _a.end() == _b.end();
 		}
@@ -180,14 +180,14 @@ namespace CORE_LIB
 		T* m_pBegin;
 		T* m_pEnd;
 		T* m_pCurrentElement;
-	}; //TVector_const_iterator
+	}; //TVectorArray_const_iterator
 
 	//Vector_iterator
 	template <class T>
 	class TVector_iterator
 	{
-		//allow TVector to create TVector_iterator instances
-		friend class TVector <T>;
+		//allow TVectorArray to create TVector_iterator instances
+		friend class TVectorArray <T>;
 
 	public:
 		TVector_iterator() : m_pBegin(nullptr),
@@ -201,7 +201,7 @@ namespace CORE_LIB
 
 	private:
 		/*
-			**Constructor can be invoked only inside TVector
+			**Constructor can be invoked only inside TVectorArray
 		*/
 		TVector_iterator(T* _begin, T* _end) : m_pBegin(_begin),
 			m_pEnd(_end), m_pCurrentElement(_begin)
@@ -343,9 +343,9 @@ namespace CORE_LIB
 				&& m_pCurrentElement != nullptr);
 		}
 
-		operator TVector_const_iterator<T>()
+		operator TVectorArray_const_iterator<T>()
 		{
-			return TVector_const_iterator<T>(m_pBegin, m_pEnd);
+			return TVectorArray_const_iterator<T>(m_pBegin, m_pEnd);
 		}
 
 	private:
@@ -361,9 +361,9 @@ namespace CORE_LIB
 		T* m_pCurrentElement;
 	}; //Vector_iterator
 
-	//TVector declaration
+	//TVectorArray declaration
 	template <class T>
-	class TVector 
+	class TVectorArray 
 	{
 	private:
 		T* m_pElements;
@@ -371,12 +371,12 @@ namespace CORE_LIB
 		size_t m_Size;
 
 	public:
-		TVector();
-		TVector(size_t _initialCapacity);
-		TVector(const TVector<T>& _source);
-		TVector(const T* _pDataArray, size_t _numData);
-		const TVector & operator=(const TVector & _rhs);
-		~TVector();
+		TVectorArray();
+		TVectorArray(size_t _initialCapacity);
+		TVectorArray(const TVectorArray<T>& _source);
+		TVectorArray(const T* _pDataArray, size_t _numData);
+		const TVectorArray & operator=(const TVectorArray & _rhs);
+		~TVectorArray();
 
 	public:
 		void push_back(const T& _data);
@@ -389,7 +389,7 @@ namespace CORE_LIB
 		const T& back();
 
 		TVector_iterator<T>		  iterator()	  const;
-		TVector_const_iterator<T> constIterator() const;
+		TVectorArray_const_iterator<T> constIterator() const;
 
 		void reserve(size_t _newCap);
 
@@ -412,7 +412,7 @@ namespace CORE_LIB
 
 		void erase(const TVector_iterator<T>& _pos);
 		void clear();
-		friend bool operator==(const TVector& _lhs, const TVector& _rhs)
+		friend bool operator==(const TVectorArray& _lhs, const TVectorArray& _rhs)
 		{
 			if (_lhs.m_Size != _rhs.m_Size)
 			{
@@ -430,15 +430,15 @@ namespace CORE_LIB
 			return true;
 		}
 
-		friend bool operator!=(const TVector& _lhs, const TVector& _rhs)
+		friend bool operator!=(const TVectorArray& _lhs, const TVectorArray& _rhs)
 		{
 			return !_lhs == _rhs;
 		}
-	}; //TVector declaration
+	}; //TVectorArray declaration
 
-	//TVector definition
+	//TVectorArray definition
 	template <class T>
-	TVector<T>::TVector()
+	TVectorArray<T>::TVectorArray()
 	{
 		m_pElements = nullptr;
 		m_Capacity	= 0;
@@ -446,7 +446,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector<T>::TVector(size_t _initialCapacity) : TVector()
+	TVectorArray<T>::TVectorArray(size_t _initialCapacity) : TVectorArray()
 	{
 		if (_initialCapacity > 0)
 		{
@@ -456,7 +456,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector<T>::TVector(const TVector<T>& _source) : TVector(_source.capacity())
+	TVectorArray<T>::TVectorArray(const TVectorArray<T>& _source) : TVectorArray(_source.capacity())
 	{
 		for (size_t i = 0; i < _source.size(); ++i)
 		{
@@ -465,7 +465,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector<T>::TVector(const T* _pDataArray, size_t _numData) : TVector()
+	TVectorArray<T>::TVectorArray(const T* _pDataArray, size_t _numData) : TVectorArray()
 	{
 		for (size_t i = 0; i < _numData; ++i)
 		{
@@ -474,7 +474,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	const TVector<T> & TVector<T>::operator=(const TVector<T> & _rhs)
+	const TVectorArray<T> & TVectorArray<T>::operator=(const TVectorArray<T> & _rhs)
 	{
 		clear();
 
@@ -490,7 +490,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector<T>::~TVector()
+	TVectorArray<T>::~TVectorArray()
 	{
 		clear();
 	}
@@ -499,7 +499,7 @@ namespace CORE_LIB
 	/*
 		**Add new element to the end
 	*/
-	void TVector<T>::push_back(const T& _data)
+	void TVectorArray<T>::push_back(const T& _data)
 	{
 		if (m_Capacity == 0)
 		{
@@ -544,7 +544,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	void TVector<T>::pop_back()
+	void TVectorArray<T>::pop_back()
 	{
 		assert(m_Size > 0 && "Vector is empty!!!!");
 
@@ -556,7 +556,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	const T& TVector<T>::front()
+	const T& TVectorArray<T>::front()
 	{
 		if (m_Size > 0)
 		{
@@ -569,7 +569,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	const T& TVector<T>::back()
+	const T& TVectorArray<T>::back()
 	{
 		if (m_Size > 0)
 		{
@@ -582,7 +582,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector_iterator<T> TVector<T>::iterator() const
+	TVector_iterator<T> TVectorArray<T>::iterator() const
 	{
 		TVector_iterator<T> it;
 
@@ -595,20 +595,20 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	TVector_const_iterator<T> TVector<T>::constIterator() const
+	TVectorArray_const_iterator<T> TVectorArray<T>::constIterator() const
 	{
-		TVector_const_iterator<T> it;
+		TVectorArray_const_iterator<T> it;
 
 		if (m_Size > 0)
 		{
-			it = TVector_const_iterator<T>(&m_pElements[0], (&m_pElements[m_Size]));
+			it = TVectorArray_const_iterator<T>(&m_pElements[0], (&m_pElements[m_Size]));
 		}
 
 		return it;
 	}
 
 	template <class T>
-	void TVector<T>::reserve(size_t _newCap)
+	void TVectorArray<T>::reserve(size_t _newCap)
 	{
 		if (_newCap > 0 && _newCap <= m_Size)
 		{
@@ -628,14 +628,14 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	T& TVector<T>::operator[](int32 _index)
+	T& TVectorArray<T>::operator[](int32 _index)
 	{
 		assert(_index >= 0 && (static_cast<size_t>(_index) < m_Size));
 		return m_pElements[_index];
 	}
 
 	template <class T>
-	const T& TVector<T>::operator[](int32 _index) const
+	const T& TVectorArray<T>::operator[](int32 _index) const
 	{
 		assert(_index >= 0 && (static_cast<size_t>(_index) < m_Size));
 		return m_pElements[_index];
@@ -646,7 +646,7 @@ namespace CORE_LIB
 		**Returns element by index, in case of incorrect index throws out_of_range
 		@_index = element location
 	*/
-	T& TVector<T>::at(int32 _index)
+	T& TVectorArray<T>::at(int32 _index)
 	{
 		if (!(_index >= 0 && (static_cast<size_t>(_index) < m_Size)))
 		{
@@ -661,7 +661,7 @@ namespace CORE_LIB
 		**Returns const reference to an element by index, in case of incorrect index throws out_of_range
 		@_index = element location
 	*/
-	const T& TVector<T>::at(int32 _index) const
+	const T& TVectorArray<T>::at(int32 _index) const
 	{
 		if (!(_index >= 0 && (static_cast<size_t>(_index) < m_Size)))
 		{
@@ -676,7 +676,7 @@ namespace CORE_LIB
 		**Erases element at given iterator position, reducing size by 1, in case of incorrect _pos throws out_of_range
 		@_pos = element position
 	*/
-	void TVector<T>::erase(const TVector_iterator<T>& _pos)
+	void TVectorArray<T>::erase(const TVector_iterator<T>& _pos)
 	{
 		int a = 5;
 		if (_pos >= iterator())
@@ -706,7 +706,7 @@ namespace CORE_LIB
 	}
 
 	template <class T>
-	void TVector<T>::clear()
+	void TVectorArray<T>::clear()
 	{
 		if (m_Capacity > 0 && m_pElements != nullptr)
 		{
