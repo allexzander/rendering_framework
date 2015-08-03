@@ -40,17 +40,17 @@ namespace ALZ_RENDERER
 			return Vector2D<T>(x * _factor, y * _factor);
 		}
 
-		Vector3D<T> operator/(T _factor) const
+		Vector2D<T> operator/(T _factor) const
 		{
 			return Vector3D<T>(x / _factor, y / _factor);
 		}
 
-		bool operator==(const Vector4D<T>& _other) const
+		bool operator==(const Vector2D<T>& _other) const
 		{
 			return x == _other.x && y == _other.y;
 		}
 
-		bool operator!=(const Vector4D<T>& _other) const
+		bool operator!=(const Vector2D<T>& _other) const
 		{
 			return *this != _other;
 		}
