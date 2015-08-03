@@ -35,22 +35,22 @@ namespace ALZ_RENDERER
 	public:
 		Vector4D<T> operator-() const
 		{
-			return Vector4D<T>(-x, -y, -z, w);
+			return Vector4D<T>(-x, -y, -z, -w);
 		}
 
 		Vector4D<T> operator*(T _factor) const
 		{
-			return Vector4D<T>(x * _factor, y * _factor, z * _factor.z, 0.0f);
+			return Vector4D<T>(x * _factor, y * _factor, z * _factor, w * _factor);
 		}
 
 		Vector4D<T> operator/(T _factor) const
 		{
-			return Vector4D<T>(x / _factor, y / _factor, z / _factor.z, 0.0f);
+			return Vector4D<T>(x / _factor, y / _factor, z / _factor, w / _factor);
 		}
 
 		bool operator==(const Vector4D<T>& _other) const
 		{
-			return x == _other.x && y == _other.y && z = _other.z;
+			return x == _other.x && y == _other.y && z = _other.z && w == _other.w; 
 		}
 
 		bool operator!=(const Vector4D<T>& _other) const
@@ -60,23 +60,23 @@ namespace ALZ_RENDERER
 
 		Vector4D<T>& operator+=(const Vector4D<T> &_other)
 		{
-			x += _other.x; y += _other.y; z += _other.z;
+			x += _other.x; y += _other.y; z += _other.z; w += _other.w;
 			return *this;
 		}
 
 		Vector4D<T>& operator-=(const Vector4D<T> &_other)
 		{
-			x -= _other.x; y -= _other.y; z -= _other.z;
+			x -= _other.x; y -= _other.y; z -= _other.z; w -= _other.w;
 			return *this;
 		}
 
 		Vector4D<T>& operator*=(const Vector4D<T> &_other)
 		{
-			x *= _other.x; y *= _other.y; z *= _other.z;
+			x *= _other.x; y *= _other.y; z *= _other.z; w *= _other.w;
 			return *this;
 		}
 
-		float length() const
+		T length() const
 		{
 			return sqrt(x * x + y * y + z * z);
 		}
@@ -99,36 +99,36 @@ namespace ALZ_RENDERER
 
 	//Non-member functions
 	template <class T>
-	inline Vector4D<T> operator+(const Vector4D<T>& v1, const Vector4D<T>& v2)
+	inline Vector4D<T> operator+(const Vector4D<T>& _v1, const Vector4D<T>& _v2)
 	{
-		return Vector4D<T>(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, 0.0f);
+		return Vector4D<T>(_v1.x + _v2.x, _v1.y + _v2.y, _v1.z + _v2.z, _v1.w + _v2.w);
 	}
 
 	template <class T>
-	inline Vector4D<T> operator-(const Vector4D<T>& v1, const Vector4D<T>& v2)
+	inline Vector4D<T> operator-(const Vector4D<T>& _v1, const Vector4D<T>& _v2)
 	{
-		return Vector4D<T>(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, 0.0f);
+		return Vector4D<T>(_v1.x - _v2.x, _v1.y - _v2.y, _v1.z - _v2.z, _v1.w - _v2.w);
 	}
 
 	template <class T>
-	inline T operator*(const Vector4D<T>& v1, const Vector4D<T>& v2)
+	inline T operator*(const Vector4D<T>& _v1, const Vector4D<T>& _v2)
 	{
-		return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
+		return _v1.x * _v2.x + _v1.y * _v2.y + _v1.z * _v2.z + _v1.w * _v2.w;
 	}
 
 	template <class T>
-	inline Vector4D<T> operator*(T _factor, const Vector4D<T>& v)
+	inline Vector4D<T> operator*(T _factor, const Vector4D<T>& _v)
 	{
-		return v * _factor;
+		return _v * _factor;
 	}
 
 	template <class T>
-	inline Vector4D<T> Cross(const Vector4D<T>& v1, const Vector4D<T>& v2)
+	inline Vector4D<T> Cross(const Vector4D<T>& _v1, const Vector4D<T>& _v2)
 	{
 		return Vector4D<T>
-			((v1.y * v2.z - v1.z * v2.y),
-			(v1.z * v2.x - v1.x * v2.z),
-			(v1.x * v2.y - v1.y * v2.x),
+			((_v1.y * _v2.z - _v1.z * _v2.y),
+			(_v1.z * _v2.x - _v1.x * _v2.z),
+			(_v1.x * _v2.y - _v1.y * _v2.x),
 			T(0));
 	}
 	//-------------------------------------------------

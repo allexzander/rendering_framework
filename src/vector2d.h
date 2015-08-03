@@ -8,7 +8,7 @@ namespace ALZ_RENDERER
 	class Vector2D
 	{
 	public:
-		Vector2D()
+		Vector2D() : x(0), y(0)
 		{}
 
 		Vector2D(T _x, T _y) : x(_x), y(_y)
@@ -73,7 +73,7 @@ namespace ALZ_RENDERER
 			return *this;
 		}
 
-		float length() const
+		T length() const
 		{
 			return sqrt(x * x + y * y);
 		}
@@ -94,26 +94,26 @@ namespace ALZ_RENDERER
 
 	//Non-member functions
 	template <class T>
-	inline Vector2D<T> operator+(const Vector2D<T>& v1, const Vector2D<T>& v2)
+	inline Vector2D<T> operator+(const Vector2D<T>& _v1, const Vector2D<T>& _v2)
 	{
-		return Vector2D<T>(v1.x + v2.x, v1.y + v2.y);
+		return Vector2D<T>(_v1.x + _v2.x, _v1.y + _v2.y);
 	}
 
 	template <class T>
-	inline Vector2D<T> operator-(const Vector2D<T>& v1, const Vector2D<T>& v2)
+	inline Vector2D<T> operator-(const Vector2D<T>& _v1, const Vector2D<T>& _v2)
 	{
-		return Vector2D<T>(v1.x - v2.x, v1.y - v2.y);
+		return Vector2D<T>(_v1.x - _v2.x, _v1.y - _v2.y);
 	}
 
 	template <class T>
-	inline T operator*(const Vector2D<T>& v1, const Vector2D<T>& v2)
+	inline T operator*(const Vector2D<T>& _v1, const Vector2D<T>& _v2)
 	{
-		return v1.x * v2.x + v1.y * v2.y;
+		return _v1.x * _v2.x + _v1.y * _v2.y;
 	}
 
 	template <class T>
-	inline Vector2D<T> operator*(T _factor, const Vector2D<T>& v)
+	inline Vector2D<T> operator*(T _factor, const Vector2D<T>& _v)
 	{
-		return v * _factor;
+		return _v * _factor;
 	}
 };//ALZ_RENDERER
