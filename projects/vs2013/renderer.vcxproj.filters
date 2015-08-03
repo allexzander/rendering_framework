@@ -18,45 +18,39 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\irendererimpl.h">
+    <ClInclude Include="..\..\include\renderer\commondefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\renderer.h">
+    <ClInclude Include="..\..\include\renderer\irendererimpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\win\rendereropenglwinimpl.h">
+    <ClInclude Include="..\..\include\renderer\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\win\winglextensionsloader.h">
+    <ClInclude Include="..\..\include\renderer\math\vector2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\rendering_framework.h">
+    <ClInclude Include="..\..\include\renderer\math\vector3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\commondefs.h">
+    <ClInclude Include="..\..\include\renderer\math\vector4d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\vector2d.h">
+    <ClInclude Include="..\..\include\renderer\win\rendereropenglwinimpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\vector3d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\vector4d.h">
+    <ClInclude Include="..\..\include\renderer\win\winglextensionsloader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\renderer.cpp">
+    <ClCompile Include="..\..\src\renderer\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\win\rendereropenglwinimpl.cpp">
+    <ClCompile Include="..\..\src\renderer\win\rendereropenglwinimpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\win\winglextensionsloader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\rendering_framework.cpp">
+    <ClCompile Include="..\..\src\renderer\win\winglextensionsloader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

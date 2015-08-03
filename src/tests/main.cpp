@@ -1,5 +1,15 @@
 #include "gtest/gtest.h"
 
+//CORE_LIB includes
+#include "core/containers/string.h"
+#include "core/containers/vector.h"
+#include "core/containers/list.h"
+#include "core/containers/map.h"
+#include "core/containers/stack.h"
+
+//ALZ_RENDERER includes
+
+
 double sum(double a, double b);
 
 TEST(SquareRootTest, PositiveNos) {

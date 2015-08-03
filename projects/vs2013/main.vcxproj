@@ -45,6 +45,7 @@
     <OutDir>$(SolutionDir)bin\</OutDir>
     <TargetName>rendering_framework_test_vs2013_w32_d</TargetName>
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir)\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -52,6 +53,7 @@
     <IntDir>$(SolutionDir)\intermediate\$(ProjectName)\</IntDir>
     <TargetName>rendering_framework_test_vs2013_w32_r</TargetName>
     <LibraryPath>$(SolutionDir)lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,6 +67,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>core_vs2013_w32_d.lib;renderer_vs2013_w32_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,6 +96,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\main.cpp" />
+    <ClCompile Include="..\..\rendering_framework.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\rendering_framework.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

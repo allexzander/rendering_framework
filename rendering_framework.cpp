@@ -1,6 +1,6 @@
 #include "rendering_framework.h"
-#include "src\commondefs.h"
-#include "src\renderer.h"
+#include "renderer\commondefs.h"
+#include "renderer\renderer.h"
 
 namespace ALZ_RENDERER
 {

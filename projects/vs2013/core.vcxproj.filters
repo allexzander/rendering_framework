@@ -18,25 +18,25 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\core\commondefs.h">
+    <ClInclude Include="..\..\include\core\commondefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\utils.h">
+    <ClInclude Include="..\..\include\core\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\containers\list.h">
+    <ClInclude Include="..\..\include\core\containers\list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\containers\map.h">
+    <ClInclude Include="..\..\include\core\containers\map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\containers\stack.h">
+    <ClInclude Include="..\..\include\core\containers\stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\containers\string.h">
+    <ClInclude Include="..\..\include\core\containers\string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\core\containers\vector.h">
+    <ClInclude Include="..\..\include\core\containers\vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

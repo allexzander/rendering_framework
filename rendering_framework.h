@@ -1,5 +1,5 @@
 #pragma once
-#include "src\renderer.h"
+#include "renderer\renderer.h"
 
 namespace ALZ_RENDERER
 {

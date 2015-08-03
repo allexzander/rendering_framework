@@ -83,13 +83,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\core\commondefs.h" />
-    <ClInclude Include="..\..\src\core\containers\list.h" />
-    <ClInclude Include="..\..\src\core\containers\map.h" />
-    <ClInclude Include="..\..\src\core\containers\stack.h" />
-    <ClInclude Include="..\..\src\core\containers\string.h" />
-    <ClInclude Include="..\..\src\core\containers\vector.h" />
-    <ClInclude Include="..\..\src\core\utils.h" />
+    <ClInclude Include="..\..\include\core\commondefs.h" />
+    <ClInclude Include="..\..\include\core\containers\list.h" />
+    <ClInclude Include="..\..\include\core\containers\map.h" />
+    <ClInclude Include="..\..\include\core\containers\stack.h" />
+    <ClInclude Include="..\..\include\core\containers\string.h" />
+    <ClInclude Include="..\..\include\core\containers\vector.h" />
+    <ClInclude Include="..\..\include\core\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\core\containers\string.cpp" />

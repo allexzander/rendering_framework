@@ -1,5 +1,5 @@
-#include "rendereropenglwinimpl.h"
-#include "winglextensionsloader.h"
+#include "renderer/win/rendereropenglwinimpl.h"
+#include "renderer/win/winglextensionsloader.h"
 #include <windows.h>
 
 #pragma comment(lib, "Opengl32")

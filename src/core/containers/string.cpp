@@ -1,4 +1,4 @@
-#include "string.h"
+#include "../../../include/core/containers/string.h"
 #include <assert.h>
 
 namespace CORE_LIB
