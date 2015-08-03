@@ -87,6 +87,9 @@
     <ClInclude Include="..\..\src\commondefs.h" />
     <ClInclude Include="..\..\src\irendererimpl.h" />
     <ClInclude Include="..\..\src\renderer.h" />
+    <ClInclude Include="..\..\src\vector2d.h" />
+    <ClInclude Include="..\..\src\vector3d.h" />
+    <ClInclude Include="..\..\src\vector4d.h" />
     <ClInclude Include="..\..\src\win\rendereropenglwinimpl.h" />
     <ClInclude Include="..\..\src\win\winglextensionsloader.h" />
   </ItemGroup>
