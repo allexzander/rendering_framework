@@ -1,0 +1,20 @@
+﻿Build started 03.08.2015 19:08:08.
+     1>Project "G:\workspace_for_repositories\rendering_framework\projects\vs2010\renderer.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"G:\workspace_for_repositories\rendering_framework\\intermediate\renderer\Debug\\" /Fd"G:\workspace_for_repositories\rendering_framework\\intermediate\renderer\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\rendering_framework.cpp ..\..\src\renderer.cpp ..\..\src\win\rendereropenglwinimpl.cpp ..\..\src\win\winglextensionsloader.cpp
+         winglextensionsloader.cpp
+         rendereropenglwinimpl.cpp
+         renderer.cpp
+         rendering_framework.cpp
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"G:\workspace_for_repositories\rendering_framework\\lib\renderer_vs2010_w32_d.lib" /NOLOGO G:\workspace_for_repositories\rendering_framework\\intermediate\renderer\Debug\rendering_framework.obj
+         G:\workspace_for_repositories\rendering_framework\\intermediate\renderer\Debug\renderer.obj
+         G:\workspace_for_repositories\rendering_framework\\intermediate\renderer\Debug\rendereropenglwinimpl.obj
+         G:\workspace_for_repositories\rendering_framework\\intermediate\renderer\Debug\winglextensionsloader.obj
+         renderer.vcxproj -> G:\workspace_for_repositories\rendering_framework\\lib\renderer_vs2010_w32_d.lib
+     1>Done Building Project "G:\workspace_for_repositories\rendering_framework\projects\vs2010\renderer.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.89

@@ -1,0 +1,9 @@
+﻿Build started 03.08.2015 19:09:48.
+     1>Project "G:\workspace_for_repositories\rendering_framework\projects\vs2013\core.vcxproj" on node 2 (Build target(s)).
+     1>Lib:
+         core.vcxproj -> G:\workspace_for_repositories\rendering_framework\lib\core_vs2013_w32_r.lib
+     1>Done Building Project "G:\workspace_for_repositories\rendering_framework\projects\vs2013\core.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.01
