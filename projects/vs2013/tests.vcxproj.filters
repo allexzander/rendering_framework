@@ -20,9 +20,15 @@
     <ClInclude Include="..\include\gtest\gtest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\tests\test_vector_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\tests\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tests\test_vector_math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

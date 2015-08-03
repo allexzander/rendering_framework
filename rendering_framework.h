@@ -1,5 +1,8 @@
 #pragma once
 #include "renderer\renderer.h"
+#include "renderer\math\vector2d.h"
+#include "renderer\math\vector3d.h"
+#include "renderer\math\vector4d.h"
 
 namespace ALZ_RENDERER
 {

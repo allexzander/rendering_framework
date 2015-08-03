@@ -93,10 +93,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\tests\test_vector_math.h" />
     <ClInclude Include="..\include\gtest\gtest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\tests\main.cpp" />
+    <ClCompile Include="..\..\src\tests\test_vector_math.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -34,7 +34,7 @@ namespace ALZ_RENDERER
 
 		Vector3D<T> operator*(T _factor) const
 		{
-			return Vector3D<T>(x * _factor, y * _factor, z * _factor.z);
+			return Vector3D<T>(x * _factor, y * _factor, z * _factor);
 		}
 
 		Vector3D<T> operator/(T _factor) const
@@ -44,7 +44,7 @@ namespace ALZ_RENDERER
 
 		bool operator==(const Vector3D<T>& _other) const
 		{
-			return x == _other.x && y == _other.y && z = _other.z;
+			return x == _other.x && y == _other.y && z == _other.z;
 		}
 
 		bool operator!=(const Vector3D<T>& _other) const
