@@ -16,7 +16,7 @@ namespace ALZ_RENDERER
 
 		Vector2D(const Vector2D<T>& _other)
 		{
-			this = _other;
+			*this = _other;
 		}
 
 		Vector2D& operator=(const Vector2D& _other)

@@ -17,7 +17,7 @@ namespace ALZ_RENDERER
 
 		Vector4D(const Vector4D<T>& _other)
 		{
-			this = _other;
+			*this = _other;
 		}
 
 		Vector4D& operator=(const Vector4D& _other)
@@ -50,7 +50,7 @@ namespace ALZ_RENDERER
 
 		bool operator==(const Vector4D<T>& _other) const
 		{
-			return x == _other.x && y == _other.y && z = _other.z && w == _other.w; 
+			return x == _other.x && y == _other.y && z == _other.z && w == _other.w; 
 		}
 
 		bool operator!=(const Vector4D<T>& _other) const

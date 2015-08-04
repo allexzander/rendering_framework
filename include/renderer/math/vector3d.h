@@ -14,7 +14,7 @@ namespace ALZ_RENDERER
 		{}
 		Vector3D(const Vector3D<T>& _other)
 		{
-			this = _other;
+			*this = _other;
 		}
 		Vector3D& operator=(const Vector3D& _other)
 		{
@@ -32,14 +32,16 @@ namespace ALZ_RENDERER
 			return Vector3D<T>(-x, -y, -z);
 		}
 
+		//Scale up
 		Vector3D<T> operator*(T _factor) const
 		{
 			return Vector3D<T>(x * _factor, y * _factor, z * _factor);
 		}
 
+		//Scale down
 		Vector3D<T> operator/(T _factor) const
 		{
-			return Vector3D<T>(x / _factor, y / _factor, z / _factor.z);
+			return Vector3D<T>(x / _factor, y / _factor, z / _factor);
 		}
 
 		bool operator==(const Vector3D<T>& _other) const
@@ -61,12 +63,6 @@ namespace ALZ_RENDERER
 		Vector3D<T>& operator-=(const Vector3D<T> &_other)
 		{
 			x -= _other.x; y -= _other.y; z -= _other.z;
-			return *this;
-		}
-
-		Vector3D<T>& operator*=(const Vector3D<T> &_other)
-		{
-			x *= _other.x; y *= _other.y; z *= _other.z;
 			return *this;
 		}
 
@@ -103,12 +99,14 @@ namespace ALZ_RENDERER
 		return Vector3D<T>(_v1.x - _v2.x, _v1.y - _v2.y, _v1.z - _v2.z);
 	}
 
+	//Dot-product
 	template <class T>
 	inline T operator*(const Vector3D<T>& _v1, const Vector3D<T>& _v2)
 	{
 		return _v1.x * _v2.x + _v1.y * _v2.y + _v1.z * _v2.z;
 	}
 
+	//Multiply to scalar on the left
 	template <class T>
 	inline Vector3D<T> operator*(T _factor, const Vector3D<T>& _v)
 	{
